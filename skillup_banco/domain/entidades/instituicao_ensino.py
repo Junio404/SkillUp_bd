@@ -6,22 +6,57 @@ from uuid import UUID
 
 @dataclass
 class InstituicaoEnsino:
-    razao_social: str
-    registro_educacional: str
-    senha_hash: str
-    nome_fantasia: Optional[str] = None
-    cnpj: Optional[str] = None
-    tipo: Optional[str] = None
-    id: UUID = field(default_factory=uuid.uuid4, init=False)
+    _razao_social: str
+    _registro_educacional: str
+    _nome_fantasia: Optional[str] = None
+    _cnpj: Optional[str] = None
+    _tipo: Optional[str] = None
+    _id: UUID = field(default_factory=uuid.uuid4, init=False)
 
-    def criar_conta(self) -> None:
-        raise NotImplementedError
+    def __post_init__(self):
+        if not self._razao_social:
+            raise ValueError("Razão social não pode ser vazia")
 
-    def fazer_login(self) -> None:
-        raise NotImplementedError
+        if not self._registro_educacional:
+            raise ValueError("Registro educacional não pode ser vazio")
+
+    @property
+    def id(self) -> UUID:
+        return self._id
+
+    @property
+    def razao_social(self) -> str:
+        return self._razao_social
+
+    @razao_social.setter
+    def razao_social(self, valor: str):
+        if not valor:
+            raise ValueError("Razão social não pode ser vazia")
+        self._razao_social = valor
+
+    @property
+    def registro_educacional(self) -> str:
+        return self._registro_educacional
+
+    @property
+    def nome_fantasia(self) -> Optional[str]:
+        return self._nome_fantasia
+
+    @nome_fantasia.setter
+    def nome_fantasia(self, valor: Optional[str]):
+        self._nome_fantasia = valor
+
+    @property
+    def cnpj(self) -> Optional[str]:
+        return self._cnpj
+
+    @property
+    def tipo(self) -> Optional[str]:
+        return self._tipo
+
+    @tipo.setter
+    def tipo(self, valor: Optional[str]):
+        self._tipo = valor
 
     def cadastrar_curso(self) -> None:
-        raise NotImplementedError
-
-    def gerenciar_cursos(self) -> None:
         raise NotImplementedError

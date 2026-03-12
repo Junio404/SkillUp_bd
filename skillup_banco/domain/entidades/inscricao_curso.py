@@ -8,11 +8,43 @@ from domain.entidades.enums import StatusInscricao
 
 @dataclass
 class InscricaoCurso:
-    data_inscricao: date
-    status: StatusInscricao
-    candidato_id: UUID
-    curso_id: UUID
-    id: UUID = field(default_factory=uuid.uuid4, init=False)
+    _data_inscricao: date
+    _status: StatusInscricao
+    _candidato_id: UUID
+    _curso_id: UUID
+    _id: UUID = field(default_factory=uuid.uuid4, init=False)
 
-    def atualizar_status_inscricao(self) -> None:
-        raise NotImplementedError
+    def __post_init__(self):
+        if not self._data_inscricao:
+            raise ValueError("Data de inscrição é obrigatória")
+
+        if not self._candidato_id:
+            raise ValueError("Candidato é obrigatório")
+
+        if not self._curso_id:
+            raise ValueError("Curso é obrigatório")
+
+    @property
+    def id(self) -> UUID:
+        return self._id
+
+    @property
+    def data_inscricao(self) -> date:
+        return self._data_inscricao
+
+    @property
+    def status(self) -> StatusInscricao:
+        return self._status
+
+    @property
+    def candidato_id(self) -> UUID:
+        return self._candidato_id
+
+    @property
+    def curso_id(self) -> UUID:
+        return self._curso_id
+
+    def atualizar_status_inscricao(self, novo_status: StatusInscricao) -> None:
+        if not novo_status:
+            raise ValueError("Status é obrigatório")
+        self._status = novo_status

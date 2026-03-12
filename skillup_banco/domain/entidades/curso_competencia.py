@@ -7,7 +7,34 @@ from domain.enums import Nivel
 
 @dataclass
 class CursoCompetencia:
-    nivel: Nivel
-    curso_id: UUID
-    competencia_id: UUID
-    id: UUID = field(default_factory=uuid.uuid4, init=False)
+    _nivel: Nivel
+    _curso_id: UUID
+    _competencia_id: UUID
+    _id: UUID = field(default_factory=uuid.uuid4, init=False)
+
+    def __post_init__(self):
+        if not self._curso_id:
+            raise ValueError("Curso é obrigatório")
+
+        if not self._competencia_id:
+            raise ValueError("Competência é obrigatória")
+
+    @property
+    def id(self) -> UUID:
+        return self._id
+
+    @property
+    def nivel(self) -> Nivel:
+        return self._nivel
+
+    @nivel.setter
+    def nivel(self, valor: Nivel):
+        self._nivel = valor
+
+    @property
+    def curso_id(self) -> UUID:
+        return self._curso_id
+
+    @property
+    def competencia_id(self) -> UUID:
+        return self._competencia_id
