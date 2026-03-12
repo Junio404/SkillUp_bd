@@ -3,16 +3,16 @@ from dataclasses import dataclass, field
 from datetime import date
 from uuid import UUID
 
-from domain.enums import StatusInscricao
+from domain.entidades.enums import StatusCandidatura
 
 
 @dataclass
-class InscricaoCurso:
-    data_inscricao: date
-    status: StatusInscricao
+class Candidatura:
+    data_candidatura: date
+    status: StatusCandidatura
     candidato_id: UUID
-    curso_id: UUID
+    vaga_id: UUID
     id: UUID = field(default_factory=uuid.uuid4, init=False)
 
-    def atualizar_status_inscricao(self) -> None:
+    def atualizar_status(self) -> None:
         raise NotImplementedError
