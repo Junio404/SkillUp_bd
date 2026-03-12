@@ -1,7 +1,9 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
+from uuid import UUID
 
 
 @dataclass
 class InstituicaoAreaEnsino:
-    instituicao_ensino_id: int = 0
-    area_ensino_id: int = 0
+    instituicao_ensino_id: UUID
+    area_ensino_id: UUID

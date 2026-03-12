@@ -1,10 +1,13 @@
-from dataclasses import dataclass
-from typing import Optional
+import uuid
+from dataclasses import dataclass, field
+from uuid import UUID
+
+from domain.enums import Nivel
 
 
 @dataclass
 class RequisitoVaga:
-    obrigatorio: bool
-    vaga_id: int
-    competencia_id: int
-    id: Optional[int] = None
+    nivel: Nivel
+    vaga_id: UUID
+    competencia_id: UUID
+    id: UUID = field(default_factory=uuid.uuid4, init=False)

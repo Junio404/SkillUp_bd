@@ -1,8 +1,9 @@
-from dataclasses import dataclass
-from typing import Optional
+import uuid
+from dataclasses import dataclass, field
+from uuid import UUID
 
 
 @dataclass
 class AreaEnsino:
     nome: str
-    descricao: Optional[str] = None
+    id: UUID = field(default_factory=uuid.uuid4, init=False)

@@ -1,5 +1,8 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
+from datetime import date
 from typing import Optional
+from uuid import UUID
 
 from domain.enums import Modalidade, TipoVaga
 
@@ -7,10 +10,20 @@ from domain.enums import Modalidade, TipoVaga
 @dataclass
 class Vaga:
     titulo: str
-    descricao: str
-    empresa_id: int
-    id: Optional[int] = None
+    modalidade: Modalidade
+    tipo: TipoVaga
+    prazo_inscricao: date
+    empresa_id: UUID
+    descricao: Optional[str] = None
     localidade: Optional[str] = None
-    modalidade: Optional[Modalidade] = None
-    tipo: Optional[TipoVaga] = None
     jornada: Optional[str] = None
+    id: UUID = field(default_factory=uuid.uuid4, init=False)
+
+    def publicar(self) -> None:
+        raise NotImplementedError
+
+    def pausar(self) -> None:
+        raise NotImplementedError
+
+    def editar(self) -> None:
+        raise NotImplementedError

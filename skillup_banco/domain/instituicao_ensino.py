@@ -1,12 +1,27 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Optional
+from uuid import UUID
 
 
 @dataclass
 class InstituicaoEnsino:
-    nome_fantasia: str
-    id: Optional[int] = None
+    razao_social: str
+    registro_educacional: str
+    senha_hash: str
+    nome_fantasia: Optional[str] = None
     cnpj: Optional[str] = None
-    razao_social: Optional[str] = None
     tipo: Optional[str] = None
-    email: Optional[str] = None
+    id: UUID = field(default_factory=uuid.uuid4, init=False)
+
+    def criar_conta(self) -> None:
+        raise NotImplementedError
+
+    def fazer_login(self) -> None:
+        raise NotImplementedError
+
+    def cadastrar_curso(self) -> None:
+        raise NotImplementedError
+
+    def gerenciar_cursos(self) -> None:
+        raise NotImplementedError

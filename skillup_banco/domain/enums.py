@@ -1,32 +1,32 @@
 from enum import Enum
 
 
-class Modalidade(str, Enum):
-    PRESENCIAL = "Presencial"
-    REMOTO = "Remoto"
-    HIBRIDO = "Hibrido"
+class Modalidade(Enum):
+    PRESENCIAL = 0
+    REMOTO = 1
+    HIBRIDO = 2
 
 
-class TipoVaga(str, Enum):
-    EMPREGO = "Emprego"
-    ESTAGIO = "Estágio"
-    TRAINEE = "Trainee"
+class TipoVaga(Enum):
+    EMPREGO = 0
+    ESTAGIO = 1
+    TRAINEE = 2
 
 
-class Nivel(str, Enum):
-    BAIXA = "Baixa"
-    MEDIA = "Media"
-    ALTA = "Alta"
+class Nivel(Enum):
+    BAIXA = 0
+    MEDIA = 1
+    ALTA = 2
 
 
-class StatusCandidatura(str, Enum):
-    ENVIADO = "Enviado"
-    EM_ANALISE = "Em analise"
-    ACEITO = "Aceito"
-    RECUSADO = "Recusado"
-    CANCELADO = "Cancelado"
+class StatusCandidatura(Enum):
+    ENVIADO = 0
+    EM_ANALISE = 1
+    ACEITO = 2
+    RECUSADO = 3
+    CANCELADO = 4
 
 
-class StatusInscricao(str, Enum):
-    DEFERIDO = "Deferido"
-    INDEFERIDO = "Indeferido"
+class StatusInscricao(Enum):
+    DEFERIDO = 0
+    INDEFERIDO = 1

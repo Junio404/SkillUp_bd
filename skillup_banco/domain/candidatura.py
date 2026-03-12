@@ -1,12 +1,18 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from datetime import date
-from typing import Optional
+from uuid import UUID
+
+from domain.enums import StatusCandidatura
 
 
 @dataclass
 class Candidatura:
-    id: Optional[int] = None
-    data_candidatura: Optional[date] = None
-    status: str = ""  # CHECK constraint
-    candidato_id: Optional[int] = None
-    vaga_id: Optional[int] = None
+    data_candidatura: date
+    status: StatusCandidatura
+    candidato_id: UUID
+    vaga_id: UUID
+    id: UUID = field(default_factory=uuid.uuid4, init=False)
+
+    def atualizar_status(self) -> None:
+        raise NotImplementedError

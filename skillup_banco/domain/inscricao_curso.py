@@ -1,6 +1,7 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from datetime import date
-from typing import Optional
+from uuid import UUID
 
 from domain.enums import StatusInscricao
 
@@ -9,6 +10,9 @@ from domain.enums import StatusInscricao
 class InscricaoCurso:
     data_inscricao: date
     status: StatusInscricao
-    candidato_id: int
-    curso_id: int
-    id: Optional[int] = None
+    candidato_id: UUID
+    curso_id: UUID
+    id: UUID = field(default_factory=uuid.uuid4, init=False)
+
+    def atualizar_status_inscricao(self) -> None:
+        raise NotImplementedError
