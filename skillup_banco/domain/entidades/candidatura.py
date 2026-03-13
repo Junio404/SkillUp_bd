@@ -8,10 +8,10 @@ from domain.entidades.enums import StatusCandidatura
 
 @dataclass
 class Candidatura:
-    _data_candidatura: date
     _status: StatusCandidatura
     _candidato_id: UUID
     _vaga_id: UUID
+    _data_candidatura: date = field(default_factory=date.today)
     _id: UUID = field(default_factory=uuid.uuid4, init=False)
 
     def __post_init__(self):

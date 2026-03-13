@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from typing import Sequence
 from uuid import UUID
 
@@ -97,3 +98,24 @@ class CandidaturaRepositorySql(CandidaturaRepository):
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
+
+    def list_by_status_e_data(
+        self,
+        status: StatusCandidatura,
+        data_inicio: date,
+        data_fim: date,
+    ) -> Sequence[Candidatura]:
+        with self._connection.connect() as conn:
+            result = conn.execute(
+                text(
+                    "SELECT * FROM candidatura "
+                    "WHERE status = :status "
+                    "AND dataCandidatura BETWEEN :data_inicio AND :data_fim"
+                ),
+                {
+                    "status": status.value,
+                    "data_inicio": data_inicio,
+                    "data_fim": data_fim,
+                },
+            )
+            return [self._to_entity(row) for row in result.mappings()]
