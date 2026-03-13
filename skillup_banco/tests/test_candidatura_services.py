@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import unittest
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 from uuid import UUID, uuid4
 
 from application.services.candidatura import (
@@ -52,8 +52,8 @@ class FakeCandidaturaRepository(CandidaturaRepository):
     def list_by_status_e_data(
         self,
         status: StatusCandidatura,
-        data_inicio: date,
-        data_fim: date,
+        data_inicio: datetime,
+        data_fim: datetime,
     ) -> list[Candidatura]:
         return [
             item
@@ -75,7 +75,7 @@ class TestCandidaturaServices(unittest.TestCase):
     def _nova_candidatura(self, candidato_id: UUID | None = None) -> Candidatura:
         candidato = candidato_id or uuid4()
         candidatura = Candidatura(
-            _data_candidatura=date.today(),
+            _data_candidatura=datetime.now(),
             _status=StatusCandidatura.ENVIADO,
             _candidato_id=candidato,
             _vaga_id=uuid4(),
@@ -94,7 +94,7 @@ class TestCandidaturaServices(unittest.TestCase):
 
         self.assertTrue(self.repo.exists(candidatura.id))
         self.assertEqual(candidatura.status, StatusCandidatura.ENVIADO)
-        self.assertEqual(candidatura.data_candidatura, date.today())
+        self.assertIsInstance(candidatura.data_candidatura, datetime)
 
     def test_criar_candidatura_duplicada_dispara_erro(self) -> None:
         candidato_id = uuid4()
@@ -157,27 +157,27 @@ class TestCandidaturaServices(unittest.TestCase):
             self.remover_service.execute(uuid4())
 
     def test_filtrar_por_status_e_data(self) -> None:
-        hoje = date.today()
+        agora = datetime.now()
         dentro_janela_1 = Candidatura(
-            _data_candidatura=hoje,
+            _data_candidatura=agora,
             _status=StatusCandidatura.ENVIADO,
             _candidato_id=uuid4(),
             _vaga_id=uuid4(),
         )
         dentro_janela_2 = Candidatura(
-            _data_candidatura=hoje - timedelta(days=1),
+            _data_candidatura=agora - timedelta(days=1),
             _status=StatusCandidatura.ENVIADO,
             _candidato_id=uuid4(),
             _vaga_id=uuid4(),
         )
         status_diferente = Candidatura(
-            _data_candidatura=hoje,
+            _data_candidatura=agora,
             _status=StatusCandidatura.ACEITO,
             _candidato_id=uuid4(),
             _vaga_id=uuid4(),
         )
         fora_janela = Candidatura(
-            _data_candidatura=hoje - timedelta(days=20),
+            _data_candidatura=agora - timedelta(days=20),
             _status=StatusCandidatura.ENVIADO,
             _candidato_id=uuid4(),
             _vaga_id=uuid4(),
@@ -190,20 +190,20 @@ class TestCandidaturaServices(unittest.TestCase):
 
         resultado = self.filtrar_por_status_data_service.execute(
             status=StatusCandidatura.ENVIADO,
-            data_inicio=hoje - timedelta(days=7),
-            data_fim=hoje,
+            data_inicio=agora - timedelta(days=7),
+            data_fim=agora,
         )
 
         self.assertEqual(len(resultado), 2)
 
     def test_filtrar_por_status_e_data_com_intervalo_invalido_dispara_erro(self) -> None:
-        hoje = date.today()
+        agora = datetime.now()
 
         with self.assertRaises(ValueError):
             self.filtrar_por_status_data_service.execute(
                 status=StatusCandidatura.ENVIADO,
-                data_inicio=hoje,
-                data_fim=hoje - timedelta(days=1),
+                data_inicio=agora,
+                data_fim=agora - timedelta(days=1),
             )
 
 

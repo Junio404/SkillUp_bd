@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import datetime
 from uuid import UUID
 
 from domain.entidades.enums import StatusCandidatura
@@ -11,7 +11,7 @@ class Candidatura:
     _status: StatusCandidatura
     _candidato_id: UUID
     _vaga_id: UUID
-    _data_candidatura: date = field(default_factory=date.today)
+    _data_candidatura: datetime = field(default_factory=datetime.now)
     _id: UUID = field(default_factory=uuid.uuid4, init=False)
 
     def __post_init__(self):
@@ -29,7 +29,7 @@ class Candidatura:
         return self._id
 
     @property
-    def data_candidatura(self) -> date:
+    def data_candidatura(self) -> datetime:
         return self._data_candidatura
 
     @property

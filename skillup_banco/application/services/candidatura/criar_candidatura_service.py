@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import datetime
 from uuid import UUID
 
 from domain.entidades.candidatura import Candidatura
@@ -16,7 +16,7 @@ class CriarCandidaturaService:
         self,
         candidato_id: UUID,
         vaga_id: UUID,
-        data_candidatura: date | None = None,
+        data_candidatura: datetime | None = None,
         status: StatusCandidatura = StatusCandidatura.ENVIADO,
     ) -> Candidatura:
         candidatura_existente = self._candidatura_repository.get_by_candidato_e_vaga(

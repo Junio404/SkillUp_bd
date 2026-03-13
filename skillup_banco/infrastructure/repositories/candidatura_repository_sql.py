@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import datetime
 from typing import Sequence
 from uuid import UUID
 
@@ -102,8 +102,8 @@ class CandidaturaRepositorySql(CandidaturaRepository):
     def list_by_status_e_data(
         self,
         status: StatusCandidatura,
-        data_inicio: date,
-        data_fim: date,
+        data_inicio: datetime,
+        data_fim: datetime,
     ) -> Sequence[Candidatura]:
         with self._connection.connect() as conn:
             result = conn.execute(

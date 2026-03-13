@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from datetime import date
+from datetime import datetime
 from typing import Sequence
 from uuid import UUID
 
@@ -23,7 +23,7 @@ class CandidaturaRepository(BaseRepository[Candidatura], ABC):
     def list_by_status_e_data(
         self,
         status: StatusCandidatura,
-        data_inicio: date,
-        data_fim: date,
+        data_inicio: datetime,
+        data_fim: datetime,
     ) -> Sequence[Candidatura]:
         pass

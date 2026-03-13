@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import datetime
 from typing import Sequence
 
 from domain.entidades.candidatura import Candidatura
@@ -15,8 +15,8 @@ class FiltrarCandidaturasPorStatusDataService:
     def execute(
         self,
         status: StatusCandidatura,
-        data_inicio: date,
-        data_fim: date,
+        data_inicio: datetime,
+        data_fim: datetime,
     ) -> Sequence[Candidatura]:
         if data_inicio > data_fim:
             raise ValueError("Data inicial nao pode ser maior que data final")
