@@ -4,7 +4,7 @@ from datetime import date
 from typing import Optional
 from uuid import UUID
 
-from domain.enums import Modalidade, TipoVaga
+from domain.entidades.enums import Modalidade, TipoVaga
 
 
 @dataclass

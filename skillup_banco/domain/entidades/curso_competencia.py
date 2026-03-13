@@ -2,7 +2,7 @@ import uuid
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from domain.enums import Nivel
+from domain.entidades.enums import Nivel
 
 
 @dataclass

@@ -1,4 +1,4 @@
-from interfaces.base_repository import BaseRepository
+from domain.interfaces.base_repository import BaseRepository
 
 __all__ = [
     "BaseRepository"
