@@ -14,7 +14,7 @@ from domain.entidades.enums import StatusCandidatura
 router = APIRouter(prefix="/candidaturas", tags=["Candidatura"])
 
 
-@router.get("/by-candidato/{candidato_id}", response_model=list[CandidaturaResponseDTO])
+@router.get("/{candidato_id}", response_model=list[CandidaturaResponseDTO])
 def list_by_candidato_candidatura(candidato_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
     try:
         return service.list_by_candidato(candidato_id=candidato_id)
@@ -27,7 +27,7 @@ def list_by_candidato_candidatura(candidato_id: UUID, service: CandidaturaServic
             status_code=500, detail=f"Erro interno ao executar list_by_candidato: {exc}") from exc
 
 
-@router.get("/by-candidato/{candidato_id}/vaga/{vaga_id}", response_model=CandidaturaResponseDTO)
+@router.get("/{candidato_id}/vaga/{vaga_id}", response_model=CandidaturaResponseDTO)
 def get_by_candidato_e_vaga_candidatura(candidato_id: UUID, vaga_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
     try:
         result = service.get_by_candidato_e_vaga(
