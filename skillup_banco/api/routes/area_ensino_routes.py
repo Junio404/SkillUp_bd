@@ -11,12 +11,14 @@ from application.dtos.area_ensino_dto import AreaEnsinoRequestDTO, AreaEnsinoRes
 
 router = APIRouter(prefix="/areas-ensino", tags=["AreaEnsino"])
 
-@router.get("/by-nome/{nome}", response_model=AreaEnsinoResponseDTO)
+
+@router.get("/{nome}", response_model=AreaEnsinoResponseDTO)
 def get_by_nome_area_ensino(nome: str, service: AreaEnsinoService = Depends(get_area_ensino_service)):
     try:
         result = service.get_by_nome(nome=nome)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
@@ -25,7 +27,9 @@ def get_by_nome_area_ensino(nome: str, service: AreaEnsinoService = Depends(get_
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao executar get_by_nome: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao executar get_by_nome: {exc}") from exc
+
 
 @router.get("/", response_model=list[AreaEnsinoResponseDTO])
 def list_area_ensino(service: AreaEnsinoService = Depends(get_area_ensino_service)):
@@ -34,22 +38,25 @@ def list_area_ensino(service: AreaEnsinoService = Depends(get_area_ensino_servic
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao listar area_ensino: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao listar area_ensino: {exc}") from exc
 
 
-@router.get("/{entity_id}", response_model=AreaEnsinoResponseDTO)
-def get_area_ensino(entity_id: UUID, service: AreaEnsinoService = Depends(get_area_ensino_service)):
+@router.get("/{area_ensino_id}", response_model=AreaEnsinoResponseDTO)
+def get_area_ensino(area_ensino_id: UUID, service: AreaEnsinoService = Depends(get_area_ensino_service)):
     try:
-        result = service.get_by_id(entity_id=entity_id)
+        result = service.get_by_id(area_ensino_id)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao buscar area_ensino por id: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao buscar area_ensino por id: {exc}") from exc
 
 
 @router.post("/", response_model=AreaEnsinoResponseDTO, status_code=status.HTTP_201_CREATED)
@@ -61,15 +68,17 @@ def create_area_ensino(payload: AreaEnsinoRequestDTO, service: AreaEnsinoService
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao criar area_ensino: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao criar area_ensino: {exc}") from exc
 
 
-@router.put("/{entity_id}", response_model=AreaEnsinoResponseDTO)
-def update_area_ensino(entity_id: UUID, payload: AreaEnsinoRequestDTO, service: AreaEnsinoService = Depends(get_area_ensino_service)):
+@router.put("/{area_ensino_id}", response_model=AreaEnsinoResponseDTO)
+def update_area_ensino(area_ensino_id: UUID, payload: AreaEnsinoRequestDTO, service: AreaEnsinoService = Depends(get_area_ensino_service)):
     try:
-        result = service.update(entity_id=entity_id, payload=payload)
+        result = service.update(area_ensino_id, payload)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
@@ -78,18 +87,17 @@ def update_area_ensino(entity_id: UUID, payload: AreaEnsinoRequestDTO, service: 
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar area_ensino: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao atualizar area_ensino: {exc}") from exc
 
 
-@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_area_ensino(entity_id: UUID, service: AreaEnsinoService = Depends(get_area_ensino_service)):
+@router.delete("/{area_ensino_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_area_ensino(area_ensino_id: UUID, service: AreaEnsinoService = Depends(get_area_ensino_service)):
     try:
-        service.delete(entity_id=entity_id)
+        service.delete(area_ensino_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao remover area_ensino: {exc}") from exc
-
-
-
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao remover area_ensino: {exc}") from exc

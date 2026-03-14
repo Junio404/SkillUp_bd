@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 import uuid
 from dataclasses import dataclass, field
 from typing import Optional
 from uuid import UUID
+from collections.abc import Sequence
+
+from domain.entidades.candidatura import Candidatura
 
 
 @dataclass
@@ -12,6 +17,7 @@ class Candidato:
     _area_interesse: Optional[str] = None
     _nivel_formacao: Optional[str] = None
     _curriculo_url: Optional[str] = None
+    _candidaturas: list[Candidatura] = field(default_factory=list)
     _id: UUID = field(default_factory=uuid.uuid4, init=False)
 
     def __post_init__(self):
@@ -75,3 +81,13 @@ class Candidato:
     @curriculo_url.setter
     def curriculo_url(self, valor: Optional[str]):
         self._curriculo_url = valor
+
+    @property
+    def candidaturas(self) -> Sequence[Candidatura]:
+        return tuple(self._candidaturas)
+
+    def definir_candidaturas(self, candidaturas: list[Candidatura]) -> None:
+        self._candidaturas = list(candidaturas)
+
+    def adicionar_candidatura(self, candidatura: Candidatura) -> None:
+        self._candidaturas.append(candidatura)

@@ -12,7 +12,7 @@ from application.dtos.instituicao_ensino_dto import InstituicaoEnsinoRequestDTO,
 router = APIRouter(prefix="/instituicoes-ensino", tags=["InstituicaoEnsino"])
 
 
-@router.get("/by-registro/{registro}", response_model=InstituicaoEnsinoResponseDTO)
+@router.get("/{registro}", response_model=InstituicaoEnsinoResponseDTO)
 def get_by_registro_educacional_instituicao_ensino(registro: str, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
         result = service.get_by_registro_educacional(registro=registro)
@@ -31,7 +31,7 @@ def get_by_registro_educacional_instituicao_ensino(registro: str, service: Insti
             status_code=500, detail=f"Erro interno ao executar get_by_registro_educacional: {exc}") from exc
 
 
-@router.get("/by-cnpj/{cnpj}", response_model=InstituicaoEnsinoResponseDTO)
+@router.get("/{cnpj}", response_model=InstituicaoEnsinoResponseDTO)
 def get_by_cnpj_instituicao_ensino(cnpj: str, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
         result = service.get_by_cnpj(cnpj=cnpj)
@@ -61,10 +61,10 @@ def list_instituicao_ensino(service: InstituicaoEnsinoService = Depends(get_inst
             status_code=500, detail=f"Erro interno ao listar instituicao_ensino: {exc}") from exc
 
 
-@router.get("/{entity_id}", response_model=InstituicaoEnsinoResponseDTO)
-def get_instituicao_ensino(entity_id: UUID, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
+@router.get("/{instituicao_ensino_id}", response_model=InstituicaoEnsinoResponseDTO)
+def get_instituicao_ensino(instituicao_ensino_id: UUID, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
-        result = service.get_by_id(entity_id=entity_id)
+        result = service.get_by_id(instituicao_ensino_id)
         if result is None:
             raise HTTPException(
                 status_code=404, detail="Registro nao encontrado")
@@ -91,10 +91,10 @@ def create_instituicao_ensino(payload: InstituicaoEnsinoRequestDTO, service: Ins
             status_code=500, detail=f"Erro interno ao criar instituicao_ensino: {exc}") from exc
 
 
-@router.put("/{entity_id}", response_model=InstituicaoEnsinoResponseDTO)
-def update_instituicao_ensino(entity_id: UUID, payload: InstituicaoEnsinoRequestDTO, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
+@router.put("/{instituicao_ensino_id}", response_model=InstituicaoEnsinoResponseDTO)
+def update_instituicao_ensino(instituicao_ensino_id: UUID, payload: InstituicaoEnsinoRequestDTO, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
-        result = service.update(entity_id=entity_id, payload=payload)
+        result = service.update(instituicao_ensino_id, payload)
         if result is None:
             raise HTTPException(
                 status_code=404, detail="Registro nao encontrado")
@@ -110,14 +110,16 @@ def update_instituicao_ensino(entity_id: UUID, payload: InstituicaoEnsinoRequest
             status_code=500, detail=f"Erro interno ao atualizar instituicao_ensino: {exc}") from exc
 
 
-@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_instituicao_ensino(entity_id: UUID, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
+@router.delete("/{instituicao_ensino_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_instituicao_ensino(instituicao_ensino_id: UUID, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
-        service.delete(entity_id=entity_id)
+        service.delete(instituicao_ensino_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao remover instituicao_ensino: {exc}") from exc
+
+
 

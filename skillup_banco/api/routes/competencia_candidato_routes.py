@@ -9,9 +9,11 @@ from application.services.competencia_candidato.competencia_candidato_service im
 from application.dtos.competencia_candidato_dto import CompetenciaCandidatoRequestDTO, CompetenciaCandidatoResponseDTO
 
 
-router = APIRouter(prefix="/competencias-candidato", tags=["CompetenciaCandidato"])
+router = APIRouter(prefix="/competencias-candidato",
+                   tags=["CompetenciaCandidato"])
 
-@router.get("/by-candidato/{candidato_id}", response_model=list[CompetenciaCandidatoResponseDTO])
+
+@router.get("/{candidato_id}", response_model=list[CompetenciaCandidatoResponseDTO])
 def list_by_candidato_competencia_candidato(candidato_id: UUID, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
     try:
         return service.list_by_candidato(candidato_id=candidato_id)
@@ -20,7 +22,9 @@ def list_by_candidato_competencia_candidato(candidato_id: UUID, service: Compete
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao executar list_by_candidato: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao executar list_by_candidato: {exc}") from exc
+
 
 @router.get("/", response_model=list[CompetenciaCandidatoResponseDTO])
 def list_competencia_candidato(service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
@@ -29,22 +33,25 @@ def list_competencia_candidato(service: CompetenciaCandidatoService = Depends(ge
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao listar competencia_candidato: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao listar competencia_candidato: {exc}") from exc
 
 
-@router.get("/{entity_id}", response_model=CompetenciaCandidatoResponseDTO)
-def get_competencia_candidato(entity_id: UUID, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
+@router.get("/{competencia_candidato_id}", response_model=CompetenciaCandidatoResponseDTO)
+def get_competencia_candidato(competencia_candidato_id: UUID, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
     try:
-        result = service.get_by_id(entity_id=entity_id)
+        result = service.get_by_id(competencia_candidato_id)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao buscar competencia_candidato por id: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao buscar competencia_candidato por id: {exc}") from exc
 
 
 @router.post("/", response_model=CompetenciaCandidatoResponseDTO, status_code=status.HTTP_201_CREATED)
@@ -56,15 +63,17 @@ def create_competencia_candidato(payload: CompetenciaCandidatoRequestDTO, servic
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao criar competencia_candidato: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao criar competencia_candidato: {exc}") from exc
 
 
-@router.put("/{entity_id}", response_model=CompetenciaCandidatoResponseDTO)
-def update_competencia_candidato(entity_id: UUID, payload: CompetenciaCandidatoRequestDTO, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
+@router.put("/{competencia_candidato_id}", response_model=CompetenciaCandidatoResponseDTO)
+def update_competencia_candidato(competencia_candidato_id: UUID, payload: CompetenciaCandidatoRequestDTO, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
     try:
-        result = service.update(entity_id=entity_id, payload=payload)
+        result = service.update(competencia_candidato_id, payload)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
@@ -73,18 +82,17 @@ def update_competencia_candidato(entity_id: UUID, payload: CompetenciaCandidatoR
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar competencia_candidato: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao atualizar competencia_candidato: {exc}") from exc
 
 
-@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_competencia_candidato(entity_id: UUID, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
+@router.delete("/{competencia_candidato_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_competencia_candidato(competencia_candidato_id: UUID, service: CompetenciaCandidatoService = Depends(get_competencia_candidato_service)):
     try:
-        service.delete(entity_id=entity_id)
+        service.delete(competencia_candidato_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao remover competencia_candidato: {exc}") from exc
-
-
-
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao remover competencia_candidato: {exc}") from exc

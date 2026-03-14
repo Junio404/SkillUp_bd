@@ -11,7 +11,7 @@ from application.dtos.requisito_vaga_dto import RequisitoVagaRequestDTO, Requisi
 
 router = APIRouter(prefix="/requisitos-vaga", tags=["RequisitoVaga"])
 
-@router.get("/by-vaga/{vaga_id}", response_model=list[RequisitoVagaResponseDTO])
+@router.get("/{vaga_id}", response_model=list[RequisitoVagaResponseDTO])
 def list_by_vaga_requisito_vaga(vaga_id: UUID, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
     try:
         return service.list_by_vaga(vaga_id=vaga_id)
@@ -32,10 +32,10 @@ def list_requisito_vaga(service: RequisitoVagaService = Depends(get_requisito_va
         raise HTTPException(status_code=500, detail=f"Erro interno ao listar requisito_vaga: {exc}") from exc
 
 
-@router.get("/{entity_id}", response_model=RequisitoVagaResponseDTO)
-def get_requisito_vaga(entity_id: UUID, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
+@router.get("/{requisito_vaga_id}", response_model=RequisitoVagaResponseDTO)
+def get_requisito_vaga(requisito_vaga_id: UUID, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
     try:
-        result = service.get_by_id(entity_id=entity_id)
+        result = service.get_by_id(requisito_vaga_id)
         if result is None:
             raise HTTPException(status_code=404, detail="Registro nao encontrado")
         return result
@@ -59,10 +59,10 @@ def create_requisito_vaga(payload: RequisitoVagaRequestDTO, service: RequisitoVa
         raise HTTPException(status_code=500, detail=f"Erro interno ao criar requisito_vaga: {exc}") from exc
 
 
-@router.put("/{entity_id}", response_model=RequisitoVagaResponseDTO)
-def update_requisito_vaga(entity_id: UUID, payload: RequisitoVagaRequestDTO, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
+@router.put("/{requisito_vaga_id}", response_model=RequisitoVagaResponseDTO)
+def update_requisito_vaga(requisito_vaga_id: UUID, payload: RequisitoVagaRequestDTO, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
     try:
-        result = service.update(entity_id=entity_id, payload=payload)
+        result = service.update(requisito_vaga_id, payload)
         if result is None:
             raise HTTPException(status_code=404, detail="Registro nao encontrado")
         return result
@@ -76,15 +76,17 @@ def update_requisito_vaga(entity_id: UUID, payload: RequisitoVagaRequestDTO, ser
         raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar requisito_vaga: {exc}") from exc
 
 
-@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_requisito_vaga(entity_id: UUID, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
+@router.delete("/{requisito_vaga_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_requisito_vaga(requisito_vaga_id: UUID, service: RequisitoVagaService = Depends(get_requisito_vaga_service)):
     try:
-        service.delete(entity_id=entity_id)
+        service.delete(requisito_vaga_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover requisito_vaga: {exc}") from exc
+
+
 
 
 

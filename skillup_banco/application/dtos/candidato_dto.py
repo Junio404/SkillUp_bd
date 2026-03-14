@@ -2,8 +2,10 @@
 
 from typing import Optional
 from uuid import UUID
+from collections.abc import Sequence
 
 from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.candidatura_dto import CandidaturaResponseDTO
 
 
 class CandidatoRequestDTO(BaseRequestDTO):
@@ -25,3 +27,12 @@ class CandidatoResponseDTO(BaseResponseDTO):
     curriculo_url: Optional[str] = None
 
 
+class CandidatoComCandidaturasResponseDTO(BaseResponseDTO):
+    id: UUID
+    nome: str
+    cpf: str
+    email: str
+    area_interesse: str | None = None
+    nivel_formacao: str | None = None
+    curriculo_url: str | None = None
+    candidaturas: Sequence[CandidaturaResponseDTO]

@@ -11,7 +11,7 @@ from application.dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
 
 router = APIRouter(prefix="/empresas", tags=["Empresa"])
 
-@router.get("/by-cnpj/{cnpj}", response_model=EmpresaResponseDTO)
+@router.get("/{cnpj}", response_model=EmpresaResponseDTO)
 def get_by_cnpj_empresa(cnpj: str, service: EmpresaService = Depends(get_empresa_service)):
     try:
         result = service.get_by_cnpj(cnpj=cnpj)
@@ -37,10 +37,10 @@ def list_empresa(service: EmpresaService = Depends(get_empresa_service)):
         raise HTTPException(status_code=500, detail=f"Erro interno ao listar empresa: {exc}") from exc
 
 
-@router.get("/{entity_id}", response_model=EmpresaResponseDTO)
-def get_empresa(entity_id: UUID, service: EmpresaService = Depends(get_empresa_service)):
+@router.get("/{empresa_id}", response_model=EmpresaResponseDTO)
+def get_empresa(empresa_id: UUID, service: EmpresaService = Depends(get_empresa_service)):
     try:
-        result = service.get_by_id(entity_id=entity_id)
+        result = service.get_by_id(empresa_id)
         if result is None:
             raise HTTPException(status_code=404, detail="Registro nao encontrado")
         return result
@@ -64,10 +64,10 @@ def create_empresa(payload: EmpresaRequestDTO, service: EmpresaService = Depends
         raise HTTPException(status_code=500, detail=f"Erro interno ao criar empresa: {exc}") from exc
 
 
-@router.put("/{entity_id}", response_model=EmpresaResponseDTO)
-def update_empresa(entity_id: UUID, payload: EmpresaRequestDTO, service: EmpresaService = Depends(get_empresa_service)):
+@router.put("/{empresa_id}", response_model=EmpresaResponseDTO)
+def update_empresa(empresa_id: UUID, payload: EmpresaRequestDTO, service: EmpresaService = Depends(get_empresa_service)):
     try:
-        result = service.update(entity_id=entity_id, payload=payload)
+        result = service.update(empresa_id, payload)
         if result is None:
             raise HTTPException(status_code=404, detail="Registro nao encontrado")
         return result
@@ -81,15 +81,17 @@ def update_empresa(entity_id: UUID, payload: EmpresaRequestDTO, service: Empresa
         raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar empresa: {exc}") from exc
 
 
-@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_empresa(entity_id: UUID, service: EmpresaService = Depends(get_empresa_service)):
+@router.delete("/{empresa_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_empresa(empresa_id: UUID, service: EmpresaService = Depends(get_empresa_service)):
     try:
-        service.delete(entity_id=entity_id)
+        service.delete(empresa_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover empresa: {exc}") from exc
+
+
 
 
 

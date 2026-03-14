@@ -11,7 +11,8 @@ from application.dtos.curso_competencia_dto import CursoCompetenciaRequestDTO, C
 
 router = APIRouter(prefix="/cursos-competencia", tags=["CursoCompetencia"])
 
-@router.get("/by-curso/{curso_id}", response_model=list[CursoCompetenciaResponseDTO])
+
+@router.get("/{curso_id}", response_model=list[CursoCompetenciaResponseDTO])
 def list_by_curso_curso_competencia(curso_id: UUID, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
     try:
         return service.list_by_curso(curso_id=curso_id)
@@ -20,7 +21,9 @@ def list_by_curso_curso_competencia(curso_id: UUID, service: CursoCompetenciaSer
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao executar list_by_curso: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao executar list_by_curso: {exc}") from exc
+
 
 @router.get("/", response_model=list[CursoCompetenciaResponseDTO])
 def list_curso_competencia(service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
@@ -29,22 +32,25 @@ def list_curso_competencia(service: CursoCompetenciaService = Depends(get_curso_
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao listar curso_competencia: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao listar curso_competencia: {exc}") from exc
 
 
-@router.get("/{entity_id}", response_model=CursoCompetenciaResponseDTO)
-def get_curso_competencia(entity_id: UUID, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
+@router.get("/{curso_competencia_id}", response_model=CursoCompetenciaResponseDTO)
+def get_curso_competencia(curso_competencia_id: UUID, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
     try:
-        result = service.get_by_id(entity_id=entity_id)
+        result = service.get_by_id(curso_competencia_id)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao buscar curso_competencia por id: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao buscar curso_competencia por id: {exc}") from exc
 
 
 @router.post("/", response_model=CursoCompetenciaResponseDTO, status_code=status.HTTP_201_CREATED)
@@ -56,15 +62,17 @@ def create_curso_competencia(payload: CursoCompetenciaRequestDTO, service: Curso
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao criar curso_competencia: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao criar curso_competencia: {exc}") from exc
 
 
-@router.put("/{entity_id}", response_model=CursoCompetenciaResponseDTO)
-def update_curso_competencia(entity_id: UUID, payload: CursoCompetenciaRequestDTO, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
+@router.put("/{curso_competencia_id}", response_model=CursoCompetenciaResponseDTO)
+def update_curso_competencia(curso_competencia_id: UUID, payload: CursoCompetenciaRequestDTO, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
     try:
-        result = service.update(entity_id=entity_id, payload=payload)
+        result = service.update(curso_competencia_id, payload)
         if result is None:
-            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
         return result
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
@@ -73,18 +81,17 @@ def update_curso_competencia(entity_id: UUID, payload: CursoCompetenciaRequestDT
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar curso_competencia: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao atualizar curso_competencia: {exc}") from exc
 
 
-@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_curso_competencia(entity_id: UUID, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
+@router.delete("/{curso_competencia_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_curso_competencia(curso_competencia_id: UUID, service: CursoCompetenciaService = Depends(get_curso_competencia_service)):
     try:
-        service.delete(entity_id=entity_id)
+        service.delete(curso_competencia_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao remover curso_competencia: {exc}") from exc
-
-
-
+        raise HTTPException(
+            status_code=500, detail=f"Erro interno ao remover curso_competencia: {exc}") from exc

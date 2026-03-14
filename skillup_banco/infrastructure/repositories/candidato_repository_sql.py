@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy import text
 
 from domain.entidades.candidato import Candidato
+from domain.entidades.candidatura import Candidatura
+from domain.entidades.enums import StatusCandidatura
 from domain.interfaces.candidato_repository import CandidatoRepository
 
 
@@ -22,6 +24,19 @@ class CandidatoRepositorySql(CandidatoRepository):
         )
         entity._id = UUID(str(row["id"]))
         return entity
+
+    def _to_candidatura_from_join(self, row) -> Candidatura | None:
+        if row["candidatura_id"] is None:
+            return None
+
+        candidatura = Candidatura(
+            _status=StatusCandidatura(row["status"]),
+            _candidato_id=UUID(str(row["candidato_id"])),
+            _vaga_id=UUID(str(row["vaga_id"])),
+            _data_candidatura=row["dataCandidatura"],
+        )
+        candidatura._id = UUID(str(row["candidatura_id"]))
+        return candidatura
 
     def add(self, entity: Candidato) -> None:
         with self._connection.begin() as conn:
@@ -107,3 +122,47 @@ class CandidatoRepositorySql(CandidatoRepository):
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
+
+    def get_with_candidaturas(self, candidato_id: UUID) -> Candidato | None:
+        with self._connection.connect() as conn:
+            result = conn.execute(
+                text(
+                    """
+                    SELECT
+                        c.id,
+                        c.nome,
+                        c.cpf,
+                        c.email,
+                        c.areaInteresse,
+                        c.nivelFormacao,
+                        c.curriculo_url,
+                        cd.id AS candidatura_id,
+                        cd.dataCandidatura,
+                        cd.status,
+                        cd.candidato_id,
+                        cd.vaga_id
+                    FROM candidato c
+                    LEFT JOIN candidatura cd
+                        ON cd.candidato_id = c.id
+                    WHERE c.id = :candidato_id
+                    ORDER BY cd.dataCandidatura DESC
+                    """
+                ),
+                {"candidato_id": str(candidato_id)},
+            )
+
+            rows = result.mappings().all()
+
+            if not rows:
+                return None
+
+            candidato = self._to_entity(rows[0])
+
+            candidaturas: list[Candidatura] = []
+            for row in rows:
+                candidatura = self._to_candidatura_from_join(row)
+                if candidatura is not None:
+                    candidaturas.append(candidatura)
+
+            candidato.definir_candidaturas(candidaturas)
+            return candidato
