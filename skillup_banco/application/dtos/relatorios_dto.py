@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 from uuid import UUID
 
 from application.dtos.base_dto import BaseResponseDTO
@@ -19,13 +20,13 @@ class CandidatoResumoCandidaturasResponseDTO(BaseResponseDTO):
 
 
 class CandidatoHistoricoCandidaturaResponseDTO(BaseResponseDTO):
-    candidatura_id: UUID
-    data_candidatura: datetime
-    status: int
-    vaga_id: UUID
-    vaga_titulo: str
-    empresa_id: UUID
-    empresa_nome_fantasia: str
+    candidatura_id: Optional[UUID] = None
+    data_candidatura: Optional[datetime] = None
+    status: Optional[int] = None
+    vaga_id: Optional[UUID] = None
+    vaga_titulo: Optional[str] = None
+    empresa_id: Optional[UUID] = None
+    empresa_nome_fantasia: Optional[str] = None
 
 
 class EmpresaResumoRecrutamentoResponseDTO(BaseResponseDTO):

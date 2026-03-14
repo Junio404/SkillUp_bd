@@ -202,10 +202,11 @@ class CandidatoRepositorySql(CandidatoRepository):
                     "v.titulo AS vaga_titulo, "
                     "e.id AS empresa_id, "
                     "e.nomeFantasia AS empresa_nome_fantasia "
-                    "FROM candidatura ca "
-                    "INNER JOIN vaga v ON v.id = ca.vaga_id "
-                    "INNER JOIN empresa e ON e.id = v.empresa_id "
-                    "WHERE ca.candidato_id = :candidato_id "
+                    "FROM candidato c "
+                    "LEFT JOIN candidatura ca ON ca.candidato_id = c.id "
+                    "LEFT JOIN vaga v ON v.id = ca.vaga_id "
+                    "LEFT JOIN empresa e ON e.id = v.empresa_id "
+                    "WHERE c.id = :candidato_id "
                     "ORDER BY ca.dataCandidatura DESC"
                 ),
                 {"candidato_id": str(candidato_id)},
