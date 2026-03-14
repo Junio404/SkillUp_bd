@@ -1,14 +1,14 @@
 -- ------------------------------------------------------------
 -- 1. CRIAR E SELECIONAR O BANCO
 -- ------------------------------------------------------------
-IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'SistemaLaboral')
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'SkillUp')
 BEGIN
-    CREATE DATABASE SistemaLaboral
+    CREATE DATABASE SkillUp
     COLLATE Latin1_General_CI_AI;
 END
 GO
 
-USE SistemaLaboral;
+USE SkillUp;
 GO
 
 -- ============================================================
@@ -51,7 +51,6 @@ CREATE TABLE dbo.EMPRESA (
     razaoSocial  VARCHAR(200)     NOT NULL,
     nomeFantasia VARCHAR(150)     NULL,
     cnpj         CHAR(14)         NOT NULL,
-    senha_hash   VARCHAR(255)     NOT NULL,
 
     CONSTRAINT PK_EMPRESA PRIMARY KEY (id),
     CONSTRAINT UQ_EMPRESA_cnpj UNIQUE (cnpj)
@@ -67,7 +66,6 @@ CREATE TABLE dbo.CANDIDATO (
     nome           VARCHAR(150)     NOT NULL,
     cpf            CHAR(11)         NOT NULL,
     email          VARCHAR(150)     NOT NULL,
-    senha_hash     VARCHAR(255)     NOT NULL,
     areaInteresse  VARCHAR(100)     NULL,
     nivelFormacao  VARCHAR(100)     NULL,
     curriculo_url  VARCHAR(300)     NULL,
@@ -89,7 +87,6 @@ CREATE TABLE dbo.INSTITUICAO_ENSINO (
     cnpj                 VARCHAR(14)      NULL,
     registroEducacional  VARCHAR(100)     NOT NULL,
     tipo                 VARCHAR(50)      NULL,
-    senha_hash           VARCHAR(255)     NOT NULL,
 
     CONSTRAINT PK_INSTITUICAO_ENSINO PRIMARY KEY (id),
     CONSTRAINT UQ_IE_cnpj UNIQUE (cnpj),
@@ -103,7 +100,7 @@ GO
 -- ============================================================
 
 -- ------------------------------------------------------------
--- CURSO  (sempre vinculado a uma INSTITUICAO_ENSINO; empresa é opcional)
+-- CURSO  (sempre vinculado a uma INSTITUICAO_ENSINO; empresa ï¿½ opcional)
 -- ------------------------------------------------------------
 IF OBJECT_ID('dbo.CURSO', 'U') IS NULL
 CREATE TABLE dbo.CURSO (
@@ -111,7 +108,7 @@ CREATE TABLE dbo.CURSO (
     nome              VARCHAR(200)     NOT NULL,
     area              VARCHAR(100)     NULL,
     cargaHoraria      INT              NULL,
-    -- 0 = presencial | 1 = remoto | 2 = híbrido
+    -- 0 = presencial | 1 = remoto | 2 = hï¿½brido
     modalidade        TINYINT          NOT NULL,
     capacidade        INT              NULL,
     prazoInscricao    DATE             NULL,
@@ -137,9 +134,9 @@ CREATE TABLE dbo.VAGA (
     titulo         VARCHAR(200)     NOT NULL,
     descricao      VARCHAR(MAX)     NULL,
     localidade     VARCHAR(150)     NULL,
-    -- 0 = presencial | 1 = remoto | 2 = híbrido
+    -- 0 = presencial | 1 = remoto | 2 = hï¿½brido
     modalidade     TINYINT          NOT NULL,
-    -- 0 = Emprego | 1 = Estágio | 2 = Trainee
+    -- 0 = Emprego | 1 = Estï¿½gio | 2 = Trainee
     tipo           TINYINT          NOT NULL,
     jornada        VARCHAR(100)     NULL,
     prazoInscricao DATE             NOT NULL,
@@ -189,7 +186,7 @@ CREATE TABLE dbo.COMPETENCIA_CANDIDATO (
         REFERENCES dbo.CANDIDATO(id),
     CONSTRAINT FK_CC_competencia FOREIGN KEY (competencia_id)
         REFERENCES dbo.COMPETENCIA(id),
-    -- Regra: candidato não pode ter a mesma competência duas vezes
+    -- Regra: candidato nï¿½o pode ter a mesma competï¿½ncia duas vezes
     CONSTRAINT UQ_CC_candidato_competencia UNIQUE (candidato_id, competencia_id),
     CONSTRAINT CK_CC_nivel CHECK (nivel IN (0, 1, 2))
 );
@@ -210,7 +207,7 @@ CREATE TABLE dbo.REQUISITO_VAGA (
         REFERENCES dbo.COMPETENCIA(id),
     CONSTRAINT FK_RV_vaga FOREIGN KEY (vaga_id)
         REFERENCES dbo.VAGA(id),
-    -- Regra: mesma competência não pode aparecer duas vezes na mesma vaga
+    -- Regra: mesma competï¿½ncia nï¿½o pode aparecer duas vezes na mesma vaga
     CONSTRAINT UQ_RV_vaga_competencia UNIQUE (vaga_id, competencia_id),
     CONSTRAINT CK_RV_nivel CHECK (nivel IN (0, 1, 2))
 );
@@ -245,7 +242,7 @@ CREATE TABLE dbo.CANDIDATURA (
     dataCandidatura  DATETIME         NOT NULL DEFAULT GETDATE(),
     candidato_id     UNIQUEIDENTIFIER NOT NULL,
     vaga_id          UNIQUEIDENTIFIER NOT NULL,
-    -- 0=enviado | 1=em análise | 2=aceita | 3=recusada | 4=cancelada
+    -- 0=enviado | 1=em anï¿½lise | 2=aceita | 3=recusada | 4=cancelada
     status           TINYINT          NOT NULL DEFAULT 0,
 
     CONSTRAINT PK_CANDIDATURA PRIMARY KEY (id),
@@ -253,8 +250,8 @@ CREATE TABLE dbo.CANDIDATURA (
         REFERENCES dbo.CANDIDATO(id),
     CONSTRAINT FK_CAND_vaga FOREIGN KEY (vaga_id)
         REFERENCES dbo.VAGA(id),
-    -- Regra: candidato não pode se candidatar duas vezes à mesma vaga
-    -- (a unicidade abrange candidaturas ativas; reinscricão é tratada no app)
+    -- Regra: candidato nï¿½o pode se candidatar duas vezes ï¿½ mesma vaga
+    -- (a unicidade abrange candidaturas ativas; reinscricï¿½o ï¿½ tratada no app)
     CONSTRAINT UQ_CAND_candidato_vaga UNIQUE (candidato_id, vaga_id),
     CONSTRAINT CK_CAND_status CHECK (status IN (0, 1, 2, 3, 4))
 );
@@ -276,21 +273,21 @@ CREATE TABLE dbo.INSCRICAO_CURSO (
         REFERENCES dbo.CANDIDATO(id),
     CONSTRAINT FK_IC_curso FOREIGN KEY (curso_id)
         REFERENCES dbo.CURSO(id),
-    -- Regra: candidato não pode se inscrever duas vezes no mesmo curso
+    -- Regra: candidato nï¿½o pode se inscrever duas vezes no mesmo curso
     CONSTRAINT UQ_IC_candidato_curso UNIQUE (candidato_id, curso_id),
     CONSTRAINT CK_IC_status CHECK (status IN (0, 1))
 );
 GO
 
 -- ============================================================
--- 5. ÍNDICES DE DESEMPENHO (além dos criados pelas constraints)
+-- 5. ï¿½NDICES DE DESEMPENHO (alï¿½m dos criados pelas constraints)
 -- ============================================================
 
 -- Buscas frequentes: vagas por empresa
 CREATE INDEX IX_VAGA_empresa_id       ON dbo.VAGA (empresa_id);
 CREATE INDEX IX_VAGA_prazoInscricao   ON dbo.VAGA (prazoInscricao);
 
--- Buscas frequentes: cursos por instituição / por empresa
+-- Buscas frequentes: cursos por instituiï¿½ï¿½o / por empresa
 CREATE INDEX IX_CURSO_instituicao_id  ON dbo.CURSO (instituicao_id);
 CREATE INDEX IX_CURSO_empresa_id      ON dbo.CURSO (empresa_id);
 CREATE INDEX IX_CURSO_prazoInscricao  ON dbo.CURSO (prazoInscricao);
@@ -300,21 +297,21 @@ CREATE INDEX IX_CANDIDATURA_candidato ON dbo.CANDIDATURA (candidato_id);
 CREATE INDEX IX_CANDIDATURA_vaga      ON dbo.CANDIDATURA (vaga_id);
 CREATE INDEX IX_CANDIDATURA_status    ON dbo.CANDIDATURA (status);
 
--- Inscrições por candidato e por curso
+-- Inscriï¿½ï¿½es por candidato e por curso
 CREATE INDEX IX_IC_candidato          ON dbo.INSCRICAO_CURSO (candidato_id);
 CREATE INDEX IX_IC_curso              ON dbo.INSCRICAO_CURSO (curso_id);
 
--- Competências por candidato (perfil)
+-- Competï¿½ncias por candidato (perfil)
 CREATE INDEX IX_CC_candidato          ON dbo.COMPETENCIA_CANDIDATO (candidato_id);
 
 -- Requisitos por vaga (matching de vagas)
 CREATE INDEX IX_RV_vaga               ON dbo.REQUISITO_VAGA (vaga_id);
 
--- Pesquisa por nome de competência
+-- Pesquisa por nome de competï¿½ncia
 CREATE INDEX IX_COMPETENCIA_nome      ON dbo.COMPETENCIA (nome);
 GO
 
 GO
 
-PRINT 'Banco SistemaLaboral criado com sucesso!';
+PRINT 'Banco SkillUp criado com sucesso!';
 GO

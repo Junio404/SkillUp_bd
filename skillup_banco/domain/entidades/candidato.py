@@ -24,8 +24,8 @@ class Candidato:
         if not self._nome:
             raise ValueError("Nome não pode ser vazio")
 
-        if not self._cpf:
-            raise ValueError("CPF inválido")
+        if len(self._cpf) != 11:
+            raise ValueError("CPF deve conter 11 dígitos")
 
         if not self._email:
             raise ValueError("Email não pode ser vazio")

@@ -18,7 +18,7 @@ class Empresa:
             raise ValueError("Nome fantasia não pode ser vazio")
 
         if len(self._cnpj) != 14:
-            raise ValueError("CNPJ inválido")
+            raise ValueError("CNPJ deve conter 14 dígitos")
 
     @property
     def id(self) -> UUID:
