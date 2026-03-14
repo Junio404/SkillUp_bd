@@ -47,16 +47,16 @@ def get_by_candidato_e_vaga_candidatura(candidato_id: UUID, vaga_id: UUID, servi
             status_code=500, detail=f"Erro interno ao executar get_by_candidato_e_vaga: {exc}") from exc
 
 
-@router.get("/por-status-e-data", response_model=list[CandidaturaResponseDTO])
+@router.get("", response_model=list[CandidaturaResponseDTO])
 def list_by_status_e_data_candidatura(
-        status_param: StatusCandidatura,
+        status: StatusCandidatura,
         data_inicio: datetime,
         data_fim: datetime,
         service: CandidaturaService = Depends(get_candidatura_service),
 ):
     try:
         return service.list_by_status_e_data(
-            status=status_param,
+            status=status,
             data_inicio=data_inicio,
             data_fim=data_fim,
         )
