@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any
 from typing import Sequence
 from uuid import UUID
 
@@ -86,3 +87,22 @@ class EmpresaRepositorySql(EmpresaRepository):
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
+
+    def list_resumo_recrutamento(self) -> Sequence[dict[str, Any]]:
+        with self._connection.connect() as conn:
+            result = conn.execute(
+                text(
+                    "SELECT "
+                    "e.id AS empresa_id, "
+                    "e.nomeFantasia AS empresa_nome_fantasia, "
+                    "COUNT(DISTINCT v.id) AS total_vagas, "
+                    "COUNT(ca.id) AS total_candidaturas, "
+                    "SUM(CASE WHEN ca.status = 2 THEN 1 ELSE 0 END) AS total_aceitos "
+                    "FROM empresa e "
+                    "LEFT JOIN vaga v ON v.empresa_id = e.id "
+                    "LEFT JOIN candidatura ca ON ca.vaga_id = v.id "
+                    "GROUP BY e.id, e.nomeFantasia "
+                    "ORDER BY total_candidaturas DESC, e.nomeFantasia ASC"
+                )
+            )
+            return [dict(row) for row in result.mappings()]
