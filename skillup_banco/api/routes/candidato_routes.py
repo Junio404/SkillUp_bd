@@ -5,10 +5,6 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_candidato_service
-from application.dtos.relatorios_dto import (
-    CandidatoHistoricoCandidaturaResponseDTO,
-    CandidatoResumoCandidaturasResponseDTO,
-)
 from application.services.candidato.candidato_service import CandidatoService
 from application.dtos.candidato_dto import CandidatoComCandidaturasResponseDTO, CandidatoRequestDTO, CandidatoResponseDTO
 
@@ -53,26 +49,6 @@ def get_by_email_candidato(email: str, service: CandidatoService = Depends(get_c
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao executar get_by_email: {exc}") from exc
 
-
-
-@router.get("/resumo-candidaturas", response_model=list[CandidatoResumoCandidaturasResponseDTO])
-def list_resumo_candidaturas(service: CandidatoService = Depends(get_candidato_service)):
-    try:
-        return service.list_resumo_candidaturas()
-    except NotImplementedError as exc:
-        raise HTTPException(status_code=501, detail=str(exc)) from exc
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao listar resumo de candidaturas: {exc}") from exc
-
-
-@router.get("/{entity_id}/historico-candidaturas", response_model=list[CandidatoHistoricoCandidaturaResponseDTO])
-def get_historico_candidaturas(entity_id: UUID, service: CandidatoService = Depends(get_candidato_service)):
-    try:
-        return service.get_historico_candidaturas(candidato_id=entity_id)
-    except NotImplementedError as exc:
-        raise HTTPException(status_code=501, detail=str(exc)) from exc
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao listar historico de candidaturas: {exc}") from exc
 
 @router.get("/", response_model=list[CandidatoResponseDTO])
 def list_candidato(service: CandidatoService = Depends(get_candidato_service)):
@@ -163,8 +139,6 @@ def delete_candidato(candidato_id: UUID, service: CandidatoService = Depends(get
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao remover candidato: {exc}") from exc

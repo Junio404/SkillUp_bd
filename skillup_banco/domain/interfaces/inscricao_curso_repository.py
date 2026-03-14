@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from domain.entidades.inscricao_curso import InscricaoCurso

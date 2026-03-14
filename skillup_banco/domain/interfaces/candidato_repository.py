@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Sequence
 from uuid import UUID
 
 from domain.entidades.candidato import Candidato
@@ -15,14 +14,6 @@ class CandidatoRepository(BaseRepository[Candidato], ABC):
 
     @abstractmethod
     def get_by_email(self, email: str) -> Candidato | None:
-        pass
-
-    @abstractmethod
-    def list_resumo_candidaturas(self) -> Sequence[dict[str, Any]]:
-        pass
-
-    @abstractmethod
-    def get_historico_candidaturas(self, candidato_id: UUID) -> Sequence[dict[str, Any]]:
         pass
 
     @abstractmethod

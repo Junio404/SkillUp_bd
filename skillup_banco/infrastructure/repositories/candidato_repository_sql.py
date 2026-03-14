@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Any
 from uuid import UUID
 
 from sqlalchemy import text
@@ -167,48 +166,3 @@ class CandidatoRepositorySql(CandidatoRepository):
 
             candidato.definir_candidaturas(candidaturas)
             return candidato
-
-    def list_resumo_candidaturas(self) -> Sequence[dict[str, Any]]:
-        with self._connection.connect() as conn:
-            result = conn.execute(
-                text(
-                    "SELECT "
-                    "c.id AS candidato_id, "
-                    "c.nome AS candidato_nome, "
-                    "c.email AS candidato_email, "
-                    "COUNT(ca.id) AS total_candidaturas, "
-                    "SUM(CASE WHEN ca.status = 0 THEN 1 ELSE 0 END) AS enviados, "
-                    "SUM(CASE WHEN ca.status = 1 THEN 1 ELSE 0 END) AS em_analise, "
-                    "SUM(CASE WHEN ca.status = 2 THEN 1 ELSE 0 END) AS aceitos, "
-                    "SUM(CASE WHEN ca.status = 3 THEN 1 ELSE 0 END) AS recusados, "
-                    "SUM(CASE WHEN ca.status = 4 THEN 1 ELSE 0 END) AS cancelados "
-                    "FROM candidato c "
-                    "LEFT JOIN candidatura ca ON ca.candidato_id = c.id "
-                    "GROUP BY c.id, c.nome, c.email "
-                    "ORDER BY total_candidaturas DESC, c.nome ASC"
-                )
-            )
-            return [dict(row) for row in result.mappings()]
-
-    def get_historico_candidaturas(self, candidato_id: UUID) -> Sequence[dict[str, Any]]:
-        with self._connection.connect() as conn:
-            result = conn.execute(
-                text(
-                    "SELECT "
-                    "ca.id AS candidatura_id, "
-                    "ca.dataCandidatura AS data_candidatura, "
-                    "ca.status AS status, "
-                    "v.id AS vaga_id, "
-                    "v.titulo AS vaga_titulo, "
-                    "e.id AS empresa_id, "
-                    "e.nomeFantasia AS empresa_nome_fantasia "
-                    "FROM candidato c "
-                    "LEFT JOIN candidatura ca ON ca.candidato_id = c.id "
-                    "LEFT JOIN vaga v ON v.id = ca.vaga_id "
-                    "LEFT JOIN empresa e ON e.id = v.empresa_id "
-                    "WHERE c.id = :candidato_id "
-                    "ORDER BY ca.dataCandidatura DESC"
-                ),
-                {"candidato_id": str(candidato_id)},
-            )
-            return [dict(row) for row in result.mappings()]

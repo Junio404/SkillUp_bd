@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from domain.entidades.candidatura import Candidatura

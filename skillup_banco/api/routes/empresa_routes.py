@@ -5,24 +5,13 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_empresa_service
-from application.dtos.relatorios_dto import EmpresaResumoRecrutamentoResponseDTO
 from application.services.empresa.empresa_service import EmpresaService
 from application.dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
 
 
 router = APIRouter(prefix="/empresas", tags=["Empresa"])
 
-@router.get("/resumo-recrutamento", response_model=list[EmpresaResumoRecrutamentoResponseDTO])
-def list_resumo_recrutamento_empresa(service: EmpresaService = Depends(get_empresa_service)):
-    try:
-        return service.list_resumo_recrutamento()
-    except NotImplementedError as exc:
-        raise HTTPException(status_code=501, detail=str(exc)) from exc
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Erro interno ao listar resumo de recrutamento: {exc}") from exc
-
-
-@router.get("/by-cnpj/{cnpj}", response_model=EmpresaResponseDTO)
+@router.get("/{cnpj}", response_model=EmpresaResponseDTO)
 def get_by_cnpj_empresa(cnpj: str, service: EmpresaService = Depends(get_empresa_service)):
     try:
         result = service.get_by_cnpj(cnpj=cnpj)
@@ -99,8 +88,6 @@ def delete_empresa(empresa_id: UUID, service: EmpresaService = Depends(get_empre
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover empresa: {exc}") from exc
 
