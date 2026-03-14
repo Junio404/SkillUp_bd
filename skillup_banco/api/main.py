@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from api.routes.area_ensino_routes import router as area_ensino_router
 from api.routes.candidato_routes import router as candidato_router
-# from api.routes.candidatura_routes import router as candidatura_router
+from api.routes.candidatura_routes import router as candidatura_router
 from api.routes.competencia_routes import router as competencia_router
 from api.routes.competencia_candidato_routes import router as competencia_candidato_router
 from api.routes.curso_routes import router as curso_router
@@ -18,7 +18,7 @@ app = FastAPI(title="SkillUp Banco API")
 
 app.include_router(area_ensino_router)
 app.include_router(candidato_router)
-# app.include_router(candidatura_router)
+app.include_router(candidatura_router)
 app.include_router(competencia_router)
 app.include_router(competencia_candidato_router)
 app.include_router(curso_router)

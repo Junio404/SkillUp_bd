@@ -1,102 +1,131 @@
-﻿# from __future__ import annotations
+﻿from __future__ import annotations
 
-# from uuid import UUID
+from datetime import datetime
+from uuid import UUID
 
-# from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-# from api.dependencies import get_candidatura_service
-# from application.services.candidatura.candidatura_service import CandidaturaService
-# from application.services.Dtos.candidatura_dto import CandidaturaRequestDTO, CandidaturaResponseDTO
-
-
-# router = APIRouter(prefix="/candidaturas", tags=["Candidatura"])
-
-# @router.get("/by-candidato/{candidato_id}", response_model=list[CandidaturaResponseDTO])
-# def list_by_candidato_candidatura(candidato_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         return service.list_by_candidato(candidato_id=candidato_id)
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except ValueError as exc:
-#         raise HTTPException(status_code=400, detail=str(exc)) from exc
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao executar list_by_candidato: {exc}") from exc
-# @router.get("/by-candidato-vaga/{candidato_id}/{vaga_id}", response_model=CandidaturaResponseDTO)
-# def get_by_candidato_e_vaga_candidatura(candidato_id: UUID, vaga_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         result = service.get_by_candidato_e_vaga(candidato_id=candidato_id, vaga_id=vaga_id)
-#         if result is None:
-#             raise HTTPException(status_code=404, detail="Registro nao encontrado")
-#         return result
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except ValueError as exc:
-#         raise HTTPException(status_code=400, detail=str(exc)) from exc
-#     except HTTPException:
-#         raise
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao executar get_by_candidato_e_vaga: {exc}") from exc
-
-# @router.get("/", response_model=list[CandidaturaResponseDTO])
-# def list_candidatura(service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         return service.list_all()
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao listar candidatura: {exc}") from exc
+from api.dependencies import get_candidatura_service
+from application.services.candidatura.candidatura_service import CandidaturaService
+from application.services.Dtos.candidatura_dto import CandidaturaRequestDTO, CandidaturaResponseDTO
+from domain.entidades.enums import StatusCandidatura
 
 
-# @router.get("/{entity_id}", response_model=CandidaturaResponseDTO)
-# def get_candidatura(entity_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         result = service.get_by_id(entity_id=entity_id)
-#         if result is None:
-#             raise HTTPException(status_code=404, detail="Registro nao encontrado")
-#         return result
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except HTTPException:
-#         raise
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao buscar candidatura por id: {exc}") from exc
+router = APIRouter(prefix="/candidaturas", tags=["Candidatura"])
 
 
-# @router.post("/", response_model=CandidaturaResponseDTO, status_code=status.HTTP_201_CREATED)
-# def create_candidatura(payload: CandidaturaRequestDTO, service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         return service.create(payload=payload)
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except ValueError as exc:
-#         raise HTTPException(status_code=400, detail=str(exc)) from exc
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao criar candidatura: {exc}") from exc
+@router.get("/by-candidato/{candidato_id}", response_model=list[CandidaturaResponseDTO])
+def list_by_candidato_candidatura(candidato_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		return service.list_by_candidato(candidato_id=candidato_id)
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except ValueError as exc:
+		raise HTTPException(status_code=400, detail=str(exc)) from exc
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao executar list_by_candidato: {exc}") from exc
 
 
-# @router.put("/{entity_id}", response_model=CandidaturaResponseDTO)
-# def update_candidatura(entity_id: UUID, payload: CandidaturaRequestDTO, service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         result = service.update(entity_id=entity_id, payload=payload)
-#         if result is None:
-#             raise HTTPException(status_code=404, detail="Registro nao encontrado")
-#         return result
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except ValueError as exc:
-#         raise HTTPException(status_code=400, detail=str(exc)) from exc
-#     except HTTPException:
-#         raise
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar candidatura: {exc}") from exc
+@router.get("/by-candidato-vaga/{candidato_id}/{vaga_id}", response_model=CandidaturaResponseDTO)
+def get_by_candidato_e_vaga_candidatura(candidato_id: UUID, vaga_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		result = service.get_by_candidato_e_vaga(candidato_id=candidato_id, vaga_id=vaga_id)
+		if result is None:
+			raise HTTPException(status_code=404, detail="Registro nao encontrado")
+		return result
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except ValueError as exc:
+		raise HTTPException(status_code=400, detail=str(exc)) from exc
+	except HTTPException:
+		raise
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao executar get_by_candidato_e_vaga: {exc}") from exc
 
 
-# @router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
-# def delete_candidatura(entity_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
-#     try:
-#         service.delete(entity_id=entity_id)
-#         return Response(status_code=status.HTTP_204_NO_CONTENT)
-#     except NotImplementedError as exc:
-#         raise HTTPException(status_code=501, detail=str(exc)) from exc
-#     except Exception as exc:
-#         raise HTTPException(status_code=500, detail=f"Erro interno ao remover candidatura: {exc}") from exc
+@router.get("/by-status", response_model=list[CandidaturaResponseDTO])
+def list_by_status_e_data_candidatura(
+	status_param: StatusCandidatura,
+	data_inicio: datetime,
+	data_fim: datetime,
+	service: CandidaturaService = Depends(get_candidatura_service),
+):
+	try:
+		return service.list_by_status_e_data(
+			status=status_param,
+			data_inicio=data_inicio,
+			data_fim=data_fim,
+		)
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except ValueError as exc:
+		raise HTTPException(status_code=400, detail=str(exc)) from exc
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao executar list_by_status_e_data: {exc}") from exc
+
+
+@router.get("/", response_model=list[CandidaturaResponseDTO])
+def list_candidatura(service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		return service.list_all()
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao listar candidatura: {exc}") from exc
+
+
+@router.get("/{entity_id}", response_model=CandidaturaResponseDTO)
+def get_candidatura(entity_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		result = service.get_by_id(entity_id=entity_id)
+		if result is None:
+			raise HTTPException(status_code=404, detail="Registro nao encontrado")
+		return result
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except HTTPException:
+		raise
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao buscar candidatura por id: {exc}") from exc
+
+
+@router.post("/", response_model=CandidaturaResponseDTO, status_code=status.HTTP_201_CREATED)
+def create_candidatura(payload: CandidaturaRequestDTO, service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		return service.create(payload=payload)
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except ValueError as exc:
+		raise HTTPException(status_code=400, detail=str(exc)) from exc
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao criar candidatura: {exc}") from exc
+
+
+@router.patch("/{entity_id}/status", response_model=CandidaturaResponseDTO)
+def update_status_candidatura(entity_id: UUID, novo_status: int, service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		if novo_status not in {status.value for status in StatusCandidatura}:
+			raise HTTPException(status_code=400, detail=f"Status invalido: {novo_status}. Use 0, 1, 2, 3 ou 4")
+		status_enum = StatusCandidatura(novo_status)
+		return service.update_status(candidatura_id=entity_id, novo_status=status_enum)
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except HTTPException:
+		raise
+	except ValueError as exc:
+		raise HTTPException(status_code=404, detail=str(exc)) from exc
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar status da candidatura: {exc}") from exc
+
+
+@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_candidatura(entity_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
+	try:
+		service.delete(entity_id=entity_id)
+		return Response(status_code=status.HTTP_204_NO_CONTENT)
+	except NotImplementedError as exc:
+		raise HTTPException(status_code=501, detail=str(exc)) from exc
+	except ValueError as exc:
+		raise HTTPException(status_code=404, detail=str(exc)) from exc
+	except Exception as exc:
+		raise HTTPException(status_code=500, detail=f"Erro interno ao remover candidatura: {exc}") from exc

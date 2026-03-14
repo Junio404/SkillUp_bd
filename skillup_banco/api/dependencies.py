@@ -11,7 +11,7 @@ from infrastructure.repositories.candidato_repository_sql import CandidatoReposi
 from application.services.candidato.candidato_service import CandidatoService
 from domain.interfaces.candidatura_repository import CandidaturaRepository
 from infrastructure.repositories.candidatura_repository_sql import CandidaturaRepositorySql
-# from application.services.candidatura.candidatura_service import CandidaturaService
+from application.services.candidatura.candidatura_service import CandidaturaService
 from domain.interfaces.competencia_repository import CompetenciaRepository
 from infrastructure.repositories.competencia_repository_sql import CompetenciaRepositorySql
 from application.services.competencia.competencia_service import CompetenciaService
@@ -64,8 +64,8 @@ def get_candidatura_repository() -> CandidaturaRepository:
     return CandidaturaRepositorySql(connection=engine)
 
 
-# def get_candidatura_service(repository: CandidaturaRepository = Depends(get_candidatura_repository)) -> CandidaturaService:
-#    return CandidaturaService(repository=repository)
+def get_candidatura_service(repository: CandidaturaRepository = Depends(get_candidatura_repository)) -> CandidaturaService:
+    return CandidaturaService(repository=repository)
 
 
 def get_competencia_repository() -> CompetenciaRepository:
