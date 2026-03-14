@@ -13,19 +13,17 @@ class RequisitoVagaService:
     def create(self, payload: RequisitoVagaRequestDTO) -> RequisitoVagaResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> RequisitoVagaResponseDTO | None:
+    def get_by_id(self, requisito_vaga_id: UUID) -> RequisitoVagaResponseDTO | None:
         pass
 
     def list_all(self) -> list[RequisitoVagaResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: RequisitoVagaRequestDTO) -> RequisitoVagaResponseDTO | None:
+    def update(self, requisito_vaga_id: UUID, payload: RequisitoVagaRequestDTO) -> RequisitoVagaResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, requisito_vaga_id: UUID) -> None:
         pass
 
     def list_by_vaga(self, vaga_id: UUID) -> list[RequisitoVagaResponseDTO]:
         pass
-
-

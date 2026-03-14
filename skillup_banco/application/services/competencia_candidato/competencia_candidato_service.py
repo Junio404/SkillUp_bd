@@ -13,19 +13,17 @@ class CompetenciaCandidatoService:
     def create(self, payload: CompetenciaCandidatoRequestDTO) -> CompetenciaCandidatoResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> CompetenciaCandidatoResponseDTO | None:
+    def get_by_id(self, competencia_candidato_id: UUID) -> CompetenciaCandidatoResponseDTO | None:
         pass
 
     def list_all(self) -> list[CompetenciaCandidatoResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: CompetenciaCandidatoRequestDTO) -> CompetenciaCandidatoResponseDTO | None:
+    def update(self, competencia_candidato_id: UUID, payload: CompetenciaCandidatoRequestDTO) -> CompetenciaCandidatoResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, competencia_candidato_id: UUID) -> None:
         pass
 
     def list_by_candidato(self, candidato_id: UUID) -> list[CompetenciaCandidatoResponseDTO]:
         pass
-
-

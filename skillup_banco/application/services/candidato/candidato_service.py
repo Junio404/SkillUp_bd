@@ -8,7 +8,13 @@ from application.dtos.candidato_dto import (
     CandidatoResponseDTO,
 )
 from application.dtos.candidatura_dto import CandidaturaResponseDTO
-from application.dtos.mapper import entity_to_response, to_response_list
+from application.dtos.mapper import (
+    entity_to_response,
+    to_response_list,
+    apply_update,
+    build_entity
+)
+
 from domain.entidades.candidato import Candidato
 from domain.interfaces.candidato_repository import CandidatoRepository
 
@@ -30,8 +36,8 @@ class CandidatoService:
         self._repository.add(entity)
         return entity_to_response(entity, CandidatoResponseDTO)
 
-    def get_by_id(self, entity_id: UUID) -> CandidatoResponseDTO | None:
-        entity = self._repository.get_by_id(entity_id)
+    def get_by_id(self, candidato_id: UUID) -> CandidatoResponseDTO | None:
+        entity = self._repository.get_by_id(candidato_id)
         if entity is None:
             return None
         return entity_to_response(entity, CandidatoResponseDTO)
@@ -40,28 +46,28 @@ class CandidatoService:
         entities = self._repository.list_all()
         return to_response_list(entities, CandidatoResponseDTO)
 
-    def update(self, entity_id: UUID, payload: CandidatoRequestDTO) -> CandidatoResponseDTO | None:
-        entity = self._repository.get_by_id(entity_id)
+    def update(self, candidato_id: UUID, payload: CandidatoRequestDTO) -> CandidatoResponseDTO | None:
+        entity = self._repository.get_by_id(candidato_id)
         if entity is None:
             raise ValueError("Candidato nao encontrado")
 
         candidato_por_cpf = self._repository.get_by_cpf(payload.cpf)
-        if candidato_por_cpf is not None and candidato_por_cpf.id != entity_id:
+        if candidato_por_cpf is not None and candidato_por_cpf.id != candidato_id:
             raise ValueError("Ja existe outro candidato com esse CPF")
 
         candidato_por_email = self._repository.get_by_email(payload.email)
-        if candidato_por_email is not None and candidato_por_email.id != entity_id:
+        if candidato_por_email is not None and candidato_por_email.id != candidato_id:
             raise ValueError("Ja existe outro candidato com esse email")
 
         entity = apply_update(entity, payload)
         self._repository.update(entity)
         return entity_to_response(entity, CandidatoResponseDTO)
 
-    def delete(self, entity_id: UUID) -> None:
-        if not self._repository.exists(entity_id):
+    def delete(self, candidato_id: UUID) -> None:
+        if not self._repository.exists(candidato_id):
             raise ValueError("Candidato nao encontrado")
 
-        self._repository.remove(entity_id)
+        self._repository.remove(candidato_id)
 
     def get_by_cpf(self, cpf: str) -> CandidatoResponseDTO | None:
         entity = self._repository.get_by_cpf(cpf=cpf)
@@ -81,7 +87,8 @@ class CandidatoService:
             return None
 
         candidato_base = entity_to_response(candidato, CandidatoResponseDTO)
-        candidaturas = to_response_list(candidato.candidaturas, CandidaturaResponseDTO)
+        candidaturas = to_response_list(
+            candidato.candidaturas, CandidaturaResponseDTO)
 
         return CandidatoComCandidaturasResponseDTO(
             id=candidato_base.id,

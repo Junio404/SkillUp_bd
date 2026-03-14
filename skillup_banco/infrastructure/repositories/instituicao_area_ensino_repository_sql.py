@@ -30,7 +30,7 @@ class InstituicaoAreaEnsinoRepositorySql(InstituicaoAreaEnsinoRepository):
                 },
             )
 
-    def get_by_id(self, entity_id: UUID) -> InstituicaoAreaEnsino | None:
+    def get_by_id(self, instituicao_area_ensino_id: UUID) -> InstituicaoAreaEnsino | None:
         raise NotImplementedError("Tabela associativa sem campo id")
 
     def list_all(self) -> Sequence[InstituicaoAreaEnsino]:
@@ -42,11 +42,11 @@ class InstituicaoAreaEnsinoRepositorySql(InstituicaoAreaEnsinoRepository):
     def update(self, entity: InstituicaoAreaEnsino) -> None:
         raise NotImplementedError("Tabela associativa sem campos mutáveis")
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, instituicao_area_ensino_id: UUID) -> None:
         raise NotImplementedError(
             "Tabela associativa sem campo id, use remove_by_chave")
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, instituicao_area_ensino_id: UUID) -> bool:
         raise NotImplementedError(
             "Tabela associativa sem campo id, use get_by_chave")
 

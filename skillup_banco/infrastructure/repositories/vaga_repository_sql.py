@@ -48,11 +48,11 @@ class VagaRepositorySql(VagaRepository):
                 },
             )
 
-    def get_by_id(self, entity_id: UUID) -> Vaga | None:
+    def get_by_id(self, vaga_id: UUID) -> Vaga | None:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT * FROM vaga WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(vaga_id)},
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
@@ -83,18 +83,18 @@ class VagaRepositorySql(VagaRepository):
                 },
             )
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, vaga_id: UUID) -> None:
         with self._connection.begin() as conn:
             conn.execute(
                 text("DELETE FROM vaga WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(vaga_id)},
             )
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, vaga_id: UUID) -> bool:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT 1 FROM vaga WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(vaga_id)},
             )
             return result.first() is not None
 

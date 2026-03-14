@@ -13,16 +13,16 @@ class InscricaoCursoService:
     def create(self, payload: InscricaoCursoRequestDTO) -> InscricaoCursoResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> InscricaoCursoResponseDTO | None:
+    def get_by_id(self, inscricao_curso_id: UUID) -> InscricaoCursoResponseDTO | None:
         pass
 
     def list_all(self) -> list[InscricaoCursoResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: InscricaoCursoRequestDTO) -> InscricaoCursoResponseDTO | None:
+    def update(self, inscricao_curso_id: UUID, payload: InscricaoCursoRequestDTO) -> InscricaoCursoResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, inscricao_curso_id: UUID) -> None:
         pass
 
     def list_by_candidato(self, candidato_id: UUID) -> list[InscricaoCursoResponseDTO]:
@@ -30,5 +30,3 @@ class InscricaoCursoService:
 
     def get_by_candidato_e_curso(self, candidato_id: UUID, curso_id: UUID) -> InscricaoCursoResponseDTO | None:
         pass
-
-

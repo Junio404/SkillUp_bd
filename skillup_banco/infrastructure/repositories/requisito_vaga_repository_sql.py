@@ -36,11 +36,11 @@ class RequisitoVagaRepositorySql(RequisitoVagaRepository):
                 },
             )
 
-    def get_by_id(self, entity_id: UUID) -> RequisitoVaga | None:
+    def get_by_id(self, requisito_vaga_id: UUID) -> RequisitoVaga | None:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT * FROM requisito_vaga WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(requisito_vaga_id)},
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
@@ -60,18 +60,18 @@ class RequisitoVagaRepositorySql(RequisitoVagaRepository):
                 },
             )
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, requisito_vaga_id: UUID) -> None:
         with self._connection.begin() as conn:
             conn.execute(
                 text("DELETE FROM requisito_vaga WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(requisito_vaga_id)},
             )
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, requisito_vaga_id: UUID) -> bool:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT 1 FROM requisito_vaga WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(requisito_vaga_id)},
             )
             return result.first() is not None
 

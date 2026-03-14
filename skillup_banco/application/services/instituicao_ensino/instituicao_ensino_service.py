@@ -13,16 +13,16 @@ class InstituicaoEnsinoService:
     def create(self, payload: InstituicaoEnsinoRequestDTO) -> InstituicaoEnsinoResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> InstituicaoEnsinoResponseDTO | None:
+    def get_by_id(self, instituicao_ensino_id: UUID) -> InstituicaoEnsinoResponseDTO | None:
         pass
 
     def list_all(self) -> list[InstituicaoEnsinoResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: InstituicaoEnsinoRequestDTO) -> InstituicaoEnsinoResponseDTO | None:
+    def update(self, instituicao_ensino_id: UUID, payload: InstituicaoEnsinoRequestDTO) -> InstituicaoEnsinoResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, instituicao_ensino_id: UUID) -> None:
         pass
 
     def get_by_registro_educacional(self, registro: str) -> InstituicaoEnsinoResponseDTO | None:
@@ -30,5 +30,3 @@ class InstituicaoEnsinoService:
 
     def get_by_cnpj(self, cnpj: str) -> InstituicaoEnsinoResponseDTO | None:
         pass
-
-

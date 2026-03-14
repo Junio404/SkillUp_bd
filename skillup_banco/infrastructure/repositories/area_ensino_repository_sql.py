@@ -23,11 +23,11 @@ class AreaEnsinoRepositorySql(AreaEnsinoRepository):
                 {"id": str(entity.id), "nome": entity.nome},
             )
 
-    def get_by_id(self, entity_id: UUID) -> AreaEnsino | None:
+    def get_by_id(self, area_ensino_id: UUID) -> AreaEnsino | None:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT * FROM area_ensino WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(area_ensino_id)},
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
@@ -44,18 +44,18 @@ class AreaEnsinoRepositorySql(AreaEnsinoRepository):
                 {"id": str(entity.id), "nome": entity.nome},
             )
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, area_ensino_id: UUID) -> None:
         with self._connection.begin() as conn:
             conn.execute(
                 text("DELETE FROM area_ensino WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(area_ensino_id)},
             )
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, area_ensino_id: UUID) -> bool:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT 1 FROM area_ensino WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(area_ensino_id)},
             )
             return result.first() is not None
 

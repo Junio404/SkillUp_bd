@@ -13,16 +13,16 @@ class InstituicaoAreaEnsinoService:
     def create(self, payload: InstituicaoAreaEnsinoRequestDTO) -> InstituicaoAreaEnsinoResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> InstituicaoAreaEnsinoResponseDTO | None:
+    def get_by_id(self, instituicao_area_ensino_id: UUID) -> InstituicaoAreaEnsinoResponseDTO | None:
         pass
 
     def list_all(self) -> list[InstituicaoAreaEnsinoResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: InstituicaoAreaEnsinoRequestDTO) -> InstituicaoAreaEnsinoResponseDTO | None:
+    def update(self, instituicao_area_ensino_id: UUID, payload: InstituicaoAreaEnsinoRequestDTO) -> InstituicaoAreaEnsinoResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, instituicao_area_ensino_id: UUID) -> None:
         pass
 
     def list_by_instituicao(self, instituicao_id: UUID) -> list[InstituicaoAreaEnsinoResponseDTO]:
@@ -30,5 +30,3 @@ class InstituicaoAreaEnsinoService:
 
     def get_by_chave(self, instituicao_id: UUID, area_ensino_id: UUID) -> InstituicaoAreaEnsinoResponseDTO | None:
         pass
-
-

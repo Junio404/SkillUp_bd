@@ -19,8 +19,8 @@ class FakeCandidaturaRepository(CandidaturaRepository):
     def add(self, entity: Candidatura) -> None:
         self._items[entity.id] = entity
 
-    def get_by_id(self, entity_id: UUID) -> Candidatura | None:
-        return self._items.get(entity_id)
+    def get_by_id(self, candidatura_id: UUID) -> Candidatura | None:
+        return self._items.get(candidatura_id)
 
     def list_all(self) -> list[Candidatura]:
         return list(self._items.values())
@@ -28,11 +28,11 @@ class FakeCandidaturaRepository(CandidaturaRepository):
     def update(self, entity: Candidatura) -> None:
         self._items[entity.id] = entity
 
-    def remove(self, entity_id: UUID) -> None:
-        self._items.pop(entity_id, None)
+    def remove(self, candidatura_id: UUID) -> None:
+        self._items.pop(candidatura_id, None)
 
-    def exists(self, entity_id: UUID) -> bool:
-        return entity_id in self._items
+    def exists(self, candidatura_id: UUID) -> bool:
+        return candidatura_id in self._items
 
     def list_by_candidato(self, candidato_id: UUID) -> list[Candidatura]:
         return [item for item in self._items.values() if item.candidato_id == candidato_id]
@@ -210,4 +210,3 @@ class TestCandidaturaServices(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

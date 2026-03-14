@@ -36,11 +36,11 @@ class CursoCompetenciaRepositorySql(CursoCompetenciaRepository):
                 },
             )
 
-    def get_by_id(self, entity_id: UUID) -> CursoCompetencia | None:
+    def get_by_id(self, curso_competencia_id: UUID) -> CursoCompetencia | None:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT * FROM curso_competencia WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(curso_competencia_id)},
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
@@ -60,18 +60,18 @@ class CursoCompetenciaRepositorySql(CursoCompetenciaRepository):
                 },
             )
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, curso_competencia_id: UUID) -> None:
         with self._connection.begin() as conn:
             conn.execute(
                 text("DELETE FROM curso_competencia WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(curso_competencia_id)},
             )
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, curso_competencia_id: UUID) -> bool:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT 1 FROM curso_competencia WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(curso_competencia_id)},
             )
             return result.first() is not None
 

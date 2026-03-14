@@ -41,11 +41,11 @@ class InstituicaoEnsinoRepositorySql(InstituicaoEnsinoRepository):
                 },
             )
 
-    def get_by_id(self, entity_id: UUID) -> InstituicaoEnsino | None:
+    def get_by_id(self, instituicao_ensino_id: UUID) -> InstituicaoEnsino | None:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT * FROM instituicao_ensino WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(instituicao_ensino_id)},
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
@@ -70,18 +70,18 @@ class InstituicaoEnsinoRepositorySql(InstituicaoEnsinoRepository):
                 },
             )
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, instituicao_ensino_id: UUID) -> None:
         with self._connection.begin() as conn:
             conn.execute(
                 text("DELETE FROM instituicao_ensino WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(instituicao_ensino_id)},
             )
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, instituicao_ensino_id: UUID) -> bool:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT 1 FROM instituicao_ensino WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(instituicao_ensino_id)},
             )
             return result.first() is not None
 

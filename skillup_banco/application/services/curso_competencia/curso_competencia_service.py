@@ -13,19 +13,17 @@ class CursoCompetenciaService:
     def create(self, payload: CursoCompetenciaRequestDTO) -> CursoCompetenciaResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> CursoCompetenciaResponseDTO | None:
+    def get_by_id(self, curso_competencia_id: UUID) -> CursoCompetenciaResponseDTO | None:
         pass
 
     def list_all(self) -> list[CursoCompetenciaResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: CursoCompetenciaRequestDTO) -> CursoCompetenciaResponseDTO | None:
+    def update(self, curso_competencia_id: UUID, payload: CursoCompetenciaRequestDTO) -> CursoCompetenciaResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, curso_competencia_id: UUID) -> None:
         pass
 
     def list_by_curso(self, curso_id: UUID) -> list[CursoCompetenciaResponseDTO]:
         pass
-
-

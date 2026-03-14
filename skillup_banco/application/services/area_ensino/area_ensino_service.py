@@ -13,19 +13,17 @@ class AreaEnsinoService:
     def create(self, payload: AreaEnsinoRequestDTO) -> AreaEnsinoResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> AreaEnsinoResponseDTO | None:
+    def get_by_id(self, area_ensino_id: UUID) -> AreaEnsinoResponseDTO | None:
         pass
 
     def list_all(self) -> list[AreaEnsinoResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: AreaEnsinoRequestDTO) -> AreaEnsinoResponseDTO | None:
+    def update(self, area_ensino_id: UUID, payload: AreaEnsinoRequestDTO) -> AreaEnsinoResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, area_ensino_id: UUID) -> None:
         pass
 
     def get_by_nome(self, nome: str) -> AreaEnsinoResponseDTO | None:
         pass
-
-

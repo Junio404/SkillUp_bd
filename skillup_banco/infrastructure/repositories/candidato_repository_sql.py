@@ -58,11 +58,11 @@ class CandidatoRepositorySql(CandidatoRepository):
                 },
             )
 
-    def get_by_id(self, entity_id: UUID) -> Candidato | None:
+    def get_by_id(self, candidato_id: UUID) -> Candidato | None:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT * FROM candidato WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(candidato_id)},
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
@@ -90,18 +90,18 @@ class CandidatoRepositorySql(CandidatoRepository):
                 },
             )
 
-    def remove(self, entity_id: UUID) -> None:
+    def remove(self, candidato_id: UUID) -> None:
         with self._connection.begin() as conn:
             conn.execute(
                 text("DELETE FROM candidato WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(candidato_id)},
             )
 
-    def exists(self, entity_id: UUID) -> bool:
+    def exists(self, candidato_id: UUID) -> bool:
         with self._connection.connect() as conn:
             result = conn.execute(
                 text("SELECT 1 FROM candidato WHERE id = :id"),
-                {"id": str(entity_id)},
+                {"id": str(candidato_id)},
             )
             return result.first() is not None
 

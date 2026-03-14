@@ -13,19 +13,17 @@ class EmpresaService:
     def create(self, payload: EmpresaRequestDTO) -> EmpresaResponseDTO:
         pass
 
-    def get_by_id(self, entity_id: UUID) -> EmpresaResponseDTO | None:
+    def get_by_id(self, empresa_id: UUID) -> EmpresaResponseDTO | None:
         pass
 
     def list_all(self) -> list[EmpresaResponseDTO]:
         pass
 
-    def update(self, entity_id: UUID, payload: EmpresaRequestDTO) -> EmpresaResponseDTO | None:
+    def update(self, empresa_id: UUID, payload: EmpresaRequestDTO) -> EmpresaResponseDTO | None:
         pass
 
-    def delete(self, entity_id: UUID) -> None:
+    def delete(self, empresa_id: UUID) -> None:
         pass
 
     def get_by_cnpj(self, cnpj: str) -> EmpresaResponseDTO | None:
         pass
-
-

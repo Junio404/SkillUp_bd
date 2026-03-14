@@ -1,6 +1,5 @@
 ﻿from __future__ import annotations
 
-from collections.abc import Sequence
 from datetime import datetime
 from uuid import UUID
 
@@ -35,8 +34,8 @@ class CandidaturaService:
         self._repository.add(candidatura)
         return entity_to_response(candidatura, CandidaturaResponseDTO)
 
-    def get_by_id(self, entity_id: UUID) -> CandidaturaResponseDTO | None:
-        candidatura = self._repository.get_by_id(entity_id)
+    def get_by_id(self, candidatura_id: UUID) -> CandidaturaResponseDTO | None:
+        candidatura = self._repository.get_by_id(candidatura_id)
         if candidatura is None:
             return None
         return entity_to_response(candidatura, CandidaturaResponseDTO)
@@ -45,11 +44,11 @@ class CandidaturaService:
         candidaturas = self._repository.list_all()
         return to_response_list(candidaturas, CandidaturaResponseDTO)
 
-    def delete(self, entity_id: UUID) -> None:
-        if not self._repository.exists(entity_id):
+    def delete(self, candidatura_id: UUID) -> None:
+        if not self._repository.exists(candidatura_id):
             raise ValueError("Candidatura nao encontrada")
 
-        self._repository.remove(entity_id)
+        self._repository.remove(candidatura_id)
 
     def list_by_candidato(self, candidato_id: UUID) -> list[CandidaturaResponseDTO]:
         candidaturas = self._repository.list_by_candidato(candidato_id)
