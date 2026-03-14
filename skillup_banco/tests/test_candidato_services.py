@@ -74,6 +74,9 @@ class FakeCandidatoRepository(CandidatoRepository):
             }
         ]
 
+    def get_with_candidaturas(self, candidato_id: UUID) -> Candidato | None:
+        return self._items.get(candidato_id)
+
 
 class TestCandidatoService(unittest.TestCase):
     def setUp(self) -> None:
