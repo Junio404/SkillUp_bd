@@ -4,14 +4,8 @@ import unittest
 from datetime import datetime, timedelta
 from uuid import UUID, uuid4
 
-from application.services.candidatura import (
-    AtualizarStatusCandidaturaService,
-    CriarCandidaturaService,
-    FiltrarCandidaturasPorStatusDataService,
-    ListarCandidaturasPorCandidatoService,
-    ObterCandidaturaPorIdService,
-    RemoverCandidaturaService,
-)
+from application.services.candidatura import CandidaturaService
+from application.services.Dtos.candidatura_dto import CandidaturaRequestDTO
 from domain.entidades.candidatura import Candidatura
 from domain.entidades.enums import StatusCandidatura
 from domain.interfaces.candidatura_repository import CandidaturaRepository
@@ -65,12 +59,7 @@ class FakeCandidaturaRepository(CandidaturaRepository):
 class TestCandidaturaServices(unittest.TestCase):
     def setUp(self) -> None:
         self.repo = FakeCandidaturaRepository()
-        self.criar_service = CriarCandidaturaService(self.repo)
-        self.filtrar_por_status_data_service = FiltrarCandidaturasPorStatusDataService(self.repo)
-        self.listar_por_candidato_service = ListarCandidaturasPorCandidatoService(self.repo)
-        self.obter_por_id_service = ObterCandidaturaPorIdService(self.repo)
-        self.atualizar_status_service = AtualizarStatusCandidaturaService(self.repo)
-        self.remover_service = RemoverCandidaturaService(self.repo)
+        self.service = CandidaturaService(self.repo)
 
     def _nova_candidatura(self, candidato_id: UUID | None = None) -> Candidatura:
         candidato = candidato_id or uuid4()
@@ -87,9 +76,13 @@ class TestCandidaturaServices(unittest.TestCase):
         candidato_id = uuid4()
         vaga_id = uuid4()
 
-        candidatura = self.criar_service.execute(
-            candidato_id=candidato_id,
-            vaga_id=vaga_id,
+        candidatura = self.service.create(
+            CandidaturaRequestDTO(
+                data_candidatura=datetime.now(),
+                status=StatusCandidatura.ENVIADO,
+                candidato_id=candidato_id,
+                vaga_id=vaga_id,
+            )
         )
 
         self.assertTrue(self.repo.exists(candidatura.id))
@@ -99,15 +92,23 @@ class TestCandidaturaServices(unittest.TestCase):
     def test_criar_candidatura_duplicada_dispara_erro(self) -> None:
         candidato_id = uuid4()
         vaga_id = uuid4()
-        self.criar_service.execute(
-            candidato_id=candidato_id,
-            vaga_id=vaga_id,
+        self.service.create(
+            CandidaturaRequestDTO(
+                data_candidatura=datetime.now(),
+                status=StatusCandidatura.ENVIADO,
+                candidato_id=candidato_id,
+                vaga_id=vaga_id,
+            )
         )
 
         with self.assertRaises(ValueError):
-            self.criar_service.execute(
-                candidato_id=candidato_id,
-                vaga_id=vaga_id,
+            self.service.create(
+                CandidaturaRequestDTO(
+                    data_candidatura=datetime.now(),
+                    status=StatusCandidatura.ENVIADO,
+                    candidato_id=candidato_id,
+                    vaga_id=vaga_id,
+                )
             )
 
     def test_listar_candidaturas_por_candidato(self) -> None:
@@ -116,14 +117,14 @@ class TestCandidaturaServices(unittest.TestCase):
         self._nova_candidatura(candidato_id=candidato_alvo)
         self._nova_candidatura(candidato_id=uuid4())
 
-        resultado = self.listar_por_candidato_service.execute(candidato_alvo)
+        resultado = self.service.list_by_candidato(candidato_alvo)
 
         self.assertEqual(len(resultado), 2)
 
     def test_obter_candidatura_por_id(self) -> None:
         candidatura = self._nova_candidatura()
 
-        resultado = self.obter_por_id_service.execute(candidatura.id)
+        resultado = self.service.get_by_id(candidatura.id)
 
         self.assertIsNotNone(resultado)
         self.assertEqual(resultado.id, candidatura.id)
@@ -131,7 +132,7 @@ class TestCandidaturaServices(unittest.TestCase):
     def test_atualizar_status_com_sucesso(self) -> None:
         candidatura = self._nova_candidatura()
 
-        atualizada = self.atualizar_status_service.execute(
+        atualizada = self.service.update_status(
             candidatura_id=candidatura.id,
             novo_status=StatusCandidatura.ACEITO,
         )
@@ -140,7 +141,7 @@ class TestCandidaturaServices(unittest.TestCase):
 
     def test_atualizar_status_inexistente_dispara_erro(self) -> None:
         with self.assertRaises(ValueError):
-            self.atualizar_status_service.execute(
+            self.service.update_status(
                 candidatura_id=uuid4(),
                 novo_status=StatusCandidatura.RECUSADO,
             )
@@ -148,13 +149,13 @@ class TestCandidaturaServices(unittest.TestCase):
     def test_remover_candidatura_com_sucesso(self) -> None:
         candidatura = self._nova_candidatura()
 
-        self.remover_service.execute(candidatura.id)
+        self.service.delete(candidatura.id)
 
         self.assertFalse(self.repo.exists(candidatura.id))
 
     def test_remover_candidatura_inexistente_dispara_erro(self) -> None:
         with self.assertRaises(ValueError):
-            self.remover_service.execute(uuid4())
+            self.service.delete(uuid4())
 
     def test_filtrar_por_status_e_data(self) -> None:
         agora = datetime.now()
@@ -188,7 +189,7 @@ class TestCandidaturaServices(unittest.TestCase):
         self.repo.add(status_diferente)
         self.repo.add(fora_janela)
 
-        resultado = self.filtrar_por_status_data_service.execute(
+        resultado = self.service.list_by_status_e_data(
             status=StatusCandidatura.ENVIADO,
             data_inicio=agora - timedelta(days=7),
             data_fim=agora,
@@ -200,7 +201,7 @@ class TestCandidaturaServices(unittest.TestCase):
         agora = datetime.now()
 
         with self.assertRaises(ValueError):
-            self.filtrar_por_status_data_service.execute(
+            self.service.list_by_status_e_data(
                 status=StatusCandidatura.ENVIADO,
                 data_inicio=agora,
                 data_fim=agora - timedelta(days=1),
