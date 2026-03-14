@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.instituicao_ensino_repository import InstituicaoEnsinoRepository
-from application.services.Dtos.instituicao_ensino_dto import InstituicaoEnsinoRequestDTO, InstituicaoEnsinoResponseDTO
+from application.dtos.instituicao_ensino_dto import InstituicaoEnsinoRequestDTO, InstituicaoEnsinoResponseDTO
 
 
 class InstituicaoEnsinoService:
@@ -30,4 +30,5 @@ class InstituicaoEnsinoService:
 
     def get_by_cnpj(self, cnpj: str) -> InstituicaoEnsinoResponseDTO | None:
         pass
+
 

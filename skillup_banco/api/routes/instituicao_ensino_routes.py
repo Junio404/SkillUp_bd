@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_instituicao_ensino_service
 from application.services.instituicao_ensino.instituicao_ensino_service import InstituicaoEnsinoService
-from application.services.Dtos.instituicao_ensino_dto import InstituicaoEnsinoRequestDTO, InstituicaoEnsinoResponseDTO
+from application.dtos.instituicao_ensino_dto import InstituicaoEnsinoRequestDTO, InstituicaoEnsinoResponseDTO
 
 
 router = APIRouter(prefix="/instituicoes-ensino", tags=["InstituicaoEnsino"])
@@ -120,3 +120,4 @@ def delete_instituicao_ensino(entity_id: UUID, service: InstituicaoEnsinoService
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao remover instituicao_ensino: {exc}") from exc
+

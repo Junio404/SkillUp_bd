@@ -5,7 +5,7 @@ from dataclasses import is_dataclass
 from enum import Enum
 from typing import Any, Iterable, TypeVar
 
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 TResponse = TypeVar("TResponse", bound=BaseResponseDTO)
 
@@ -86,4 +86,5 @@ def apply_update(entity: Any, request: BaseRequestDTO) -> Any:
             setattr(entity, key, value)
 
     return entity
+
 

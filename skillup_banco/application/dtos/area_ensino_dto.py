@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class AreaEnsinoRequestDTO(BaseRequestDTO):
@@ -12,3 +12,4 @@ class AreaEnsinoRequestDTO(BaseRequestDTO):
 class AreaEnsinoResponseDTO(BaseResponseDTO):
     id: UUID
     nome: str
+

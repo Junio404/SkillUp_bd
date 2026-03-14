@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.vaga_repository import VagaRepository
-from application.services.Dtos.vaga_dto import VagaRequestDTO, VagaResponseDTO
+from application.dtos.vaga_dto import VagaRequestDTO, VagaResponseDTO
 
 
 class VagaService:
@@ -27,4 +27,5 @@ class VagaService:
 
     def list_by_empresa(self, empresa_id: UUID) -> list[VagaResponseDTO]:
         pass
+
 

@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.area_ensino_repository import AreaEnsinoRepository
-from application.services.Dtos.area_ensino_dto import AreaEnsinoRequestDTO, AreaEnsinoResponseDTO
+from application.dtos.area_ensino_dto import AreaEnsinoRequestDTO, AreaEnsinoResponseDTO
 
 
 class AreaEnsinoService:
@@ -27,4 +27,5 @@ class AreaEnsinoService:
 
     def get_by_nome(self, nome: str) -> AreaEnsinoResponseDTO | None:
         pass
+
 

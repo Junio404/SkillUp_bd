@@ -4,7 +4,7 @@ from datetime import date
 from uuid import UUID
 
 from domain.entidades.enums import StatusInscricao
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class InscricaoCursoRequestDTO(BaseRequestDTO):
@@ -20,4 +20,5 @@ class InscricaoCursoResponseDTO(BaseResponseDTO):
     status: StatusInscricao
     candidato_id: UUID
     curso_id: UUID
+
 

@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_vaga_service
 from application.services.vaga.vaga_service import VagaService
-from application.services.Dtos.vaga_dto import VagaRequestDTO, VagaResponseDTO
+from application.dtos.vaga_dto import VagaRequestDTO, VagaResponseDTO
 
 
 router = APIRouter(prefix="/vagas", tags=["Vaga"])
@@ -85,5 +85,6 @@ def delete_vaga(entity_id: UUID, service: VagaService = Depends(get_vaga_service
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover vaga: {exc}") from exc
+
 
 

@@ -3,7 +3,7 @@
 from typing import Optional
 from uuid import UUID
 
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class CandidatoRequestDTO(BaseRequestDTO):
@@ -23,4 +23,5 @@ class CandidatoResponseDTO(BaseResponseDTO):
     area_interesse: Optional[str] = None
     nivel_formacao: Optional[str] = None
     curriculo_url: Optional[str] = None
+
 

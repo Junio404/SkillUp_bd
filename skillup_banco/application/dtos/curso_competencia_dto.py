@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.entidades.enums import Nivel
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class CursoCompetenciaRequestDTO(BaseRequestDTO):
@@ -17,4 +17,5 @@ class CursoCompetenciaResponseDTO(BaseResponseDTO):
     nivel: Nivel
     curso_id: UUID
     competencia_id: UUID
+
 

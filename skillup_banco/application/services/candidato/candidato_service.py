@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.candidato_repository import CandidatoRepository
-from application.services.Dtos.candidato_dto import CandidatoRequestDTO, CandidatoResponseDTO
+from application.dtos.candidato_dto import CandidatoRequestDTO, CandidatoResponseDTO
 
 
 class CandidatoService:
@@ -30,4 +30,5 @@ class CandidatoService:
 
     def get_by_email(self, email: str) -> CandidatoResponseDTO | None:
         pass
+
 

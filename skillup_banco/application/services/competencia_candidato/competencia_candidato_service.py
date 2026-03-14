@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.competencia_candidato_repository import CompetenciaCandidatoRepository
-from application.services.Dtos.competencia_candidato_dto import CompetenciaCandidatoRequestDTO, CompetenciaCandidatoResponseDTO
+from application.dtos.competencia_candidato_dto import CompetenciaCandidatoRequestDTO, CompetenciaCandidatoResponseDTO
 
 
 class CompetenciaCandidatoService:
@@ -27,4 +27,5 @@ class CompetenciaCandidatoService:
 
     def list_by_candidato(self, candidato_id: UUID) -> list[CompetenciaCandidatoResponseDTO]:
         pass
+
 

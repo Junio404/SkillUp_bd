@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.competencia_repository import CompetenciaRepository
-from application.services.Dtos.competencia_dto import CompetenciaRequestDTO, CompetenciaResponseDTO
+from application.dtos.competencia_dto import CompetenciaRequestDTO, CompetenciaResponseDTO
 
 
 class CompetenciaService:
@@ -27,4 +27,5 @@ class CompetenciaService:
 
     def get_by_nome(self, nome: str) -> CompetenciaResponseDTO | None:
         pass
+
 

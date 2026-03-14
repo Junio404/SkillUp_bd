@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.instituicao_area_ensino_repository import InstituicaoAreaEnsinoRepository
-from application.services.Dtos.instituicao_area_ensino_dto import InstituicaoAreaEnsinoRequestDTO, InstituicaoAreaEnsinoResponseDTO
+from application.dtos.instituicao_area_ensino_dto import InstituicaoAreaEnsinoRequestDTO, InstituicaoAreaEnsinoResponseDTO
 
 
 class InstituicaoAreaEnsinoService:
@@ -30,4 +30,5 @@ class InstituicaoAreaEnsinoService:
 
     def get_by_chave(self, instituicao_id: UUID, area_ensino_id: UUID) -> InstituicaoAreaEnsinoResponseDTO | None:
         pass
+
 

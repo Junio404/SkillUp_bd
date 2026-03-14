@@ -5,7 +5,7 @@ from typing import Optional
 from uuid import UUID
 
 from domain.entidades.enums import Modalidade, TipoVaga
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class VagaRequestDTO(BaseRequestDTO):
@@ -29,4 +29,5 @@ class VagaResponseDTO(BaseResponseDTO):
     descricao: Optional[str] = None
     localidade: Optional[str] = None
     jornada: Optional[str] = None
+
 

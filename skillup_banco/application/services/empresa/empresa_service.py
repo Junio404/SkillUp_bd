@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.empresa_repository import EmpresaRepository
-from application.services.Dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
+from application.dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
 
 
 class EmpresaService:
@@ -27,4 +27,5 @@ class EmpresaService:
 
     def get_by_cnpj(self, cnpj: str) -> EmpresaResponseDTO | None:
         pass
+
 

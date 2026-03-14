@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_competencia_candidato_service
 from application.services.competencia_candidato.competencia_candidato_service import CompetenciaCandidatoService
-from application.services.Dtos.competencia_candidato_dto import CompetenciaCandidatoRequestDTO, CompetenciaCandidatoResponseDTO
+from application.dtos.competencia_candidato_dto import CompetenciaCandidatoRequestDTO, CompetenciaCandidatoResponseDTO
 
 
 router = APIRouter(prefix="/competencias-candidato", tags=["CompetenciaCandidato"])
@@ -85,5 +85,6 @@ def delete_competencia_candidato(entity_id: UUID, service: CompetenciaCandidatoS
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover competencia_candidato: {exc}") from exc
+
 
 

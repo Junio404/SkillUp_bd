@@ -1,11 +1,11 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import unittest
 from datetime import datetime, timedelta
 from uuid import UUID, uuid4
 
 from application.services.candidatura import CandidaturaService
-from application.services.Dtos.candidatura_dto import CandidaturaRequestDTO
+from application.dtos.candidatura_dto import CandidaturaRequestDTO
 from domain.entidades.candidatura import Candidatura
 from domain.entidades.enums import StatusCandidatura
 from domain.interfaces.candidatura_repository import CandidaturaRepository
@@ -210,3 +210,4 @@ class TestCandidaturaServices(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

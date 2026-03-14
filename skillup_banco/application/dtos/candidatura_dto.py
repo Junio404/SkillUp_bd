@@ -4,7 +4,7 @@ from datetime import datetime
 from uuid import UUID
 
 from domain.entidades.enums import StatusCandidatura
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class CandidaturaRequestDTO(BaseRequestDTO):
@@ -20,4 +20,5 @@ class CandidaturaResponseDTO(BaseResponseDTO):
     status: StatusCandidatura
     candidato_id: UUID
     vaga_id: UUID
+
 

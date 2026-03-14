@@ -1,9 +1,9 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Sequence
 from uuid import UUID
 
-from application.services.Dtos.candidatura_dto import CandidaturaRequestDTO
+from application.dtos.candidatura_dto import CandidaturaRequestDTO
 from domain.entidades.candidatura import Candidatura
 from domain.entidades.enums import StatusCandidatura
 from domain.interfaces.candidatura_repository import CandidaturaRepository

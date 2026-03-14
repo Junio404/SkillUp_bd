@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_empresa_service
 from application.services.empresa.empresa_service import EmpresaService
-from application.services.Dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
+from application.dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
 
 
 router = APIRouter(prefix="/empresas", tags=["Empresa"])
@@ -90,5 +90,6 @@ def delete_empresa(entity_id: UUID, service: EmpresaService = Depends(get_empres
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover empresa: {exc}") from exc
+
 
 

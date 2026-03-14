@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.inscricao_curso_repository import InscricaoCursoRepository
-from application.services.Dtos.inscricao_curso_dto import InscricaoCursoRequestDTO, InscricaoCursoResponseDTO
+from application.dtos.inscricao_curso_dto import InscricaoCursoRequestDTO, InscricaoCursoResponseDTO
 
 
 class InscricaoCursoService:
@@ -30,4 +30,5 @@ class InscricaoCursoService:
 
     def get_by_candidato_e_curso(self, candidato_id: UUID, curso_id: UUID) -> InscricaoCursoResponseDTO | None:
         pass
+
 

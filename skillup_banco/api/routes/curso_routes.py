@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_curso_service
 from application.services.curso.curso_service import CursoService
-from application.services.Dtos.curso_dto import CursoRequestDTO, CursoResponseDTO
+from application.dtos.curso_dto import CursoRequestDTO, CursoResponseDTO
 
 
 router = APIRouter(prefix="/cursos", tags=["Curso"])
@@ -95,5 +95,6 @@ def delete_curso(entity_id: UUID, service: CursoService = Depends(get_curso_serv
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover curso: {exc}") from exc
+
 
 

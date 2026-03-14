@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.curso_competencia_repository import CursoCompetenciaRepository
-from application.services.Dtos.curso_competencia_dto import CursoCompetenciaRequestDTO, CursoCompetenciaResponseDTO
+from application.dtos.curso_competencia_dto import CursoCompetenciaRequestDTO, CursoCompetenciaResponseDTO
 
 
 class CursoCompetenciaService:
@@ -27,4 +27,5 @@ class CursoCompetenciaService:
 
     def list_by_curso(self, curso_id: UUID) -> list[CursoCompetenciaResponseDTO]:
         pass
+
 

@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_candidato_service
 from application.services.candidato.candidato_service import CandidatoService
-from application.services.Dtos.candidato_dto import CandidatoRequestDTO, CandidatoResponseDTO
+from application.dtos.candidato_dto import CandidatoRequestDTO, CandidatoResponseDTO
 
 
 router = APIRouter(prefix="/candidatos", tags=["Candidato"])
@@ -105,5 +105,6 @@ def delete_candidato(entity_id: UUID, service: CandidatoService = Depends(get_ca
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover candidato: {exc}") from exc
+
 
 

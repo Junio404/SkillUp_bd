@@ -3,7 +3,7 @@
 from typing import Optional
 from uuid import UUID
 
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class InstituicaoEnsinoRequestDTO(BaseRequestDTO):
@@ -21,4 +21,5 @@ class InstituicaoEnsinoResponseDTO(BaseResponseDTO):
     nome_fantasia: Optional[str] = None
     cnpj: Optional[str] = None
     tipo: Optional[str] = None
+
 

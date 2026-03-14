@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from domain.interfaces.requisito_vaga_repository import RequisitoVagaRepository
-from application.services.Dtos.requisito_vaga_dto import RequisitoVagaRequestDTO, RequisitoVagaResponseDTO
+from application.dtos.requisito_vaga_dto import RequisitoVagaRequestDTO, RequisitoVagaResponseDTO
 
 
 class RequisitoVagaService:
@@ -27,4 +27,5 @@ class RequisitoVagaService:
 
     def list_by_vaga(self, vaga_id: UUID) -> list[RequisitoVagaResponseDTO]:
         pass
+
 

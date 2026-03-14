@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_inscricao_curso_service
 from application.services.inscricao_curso.inscricao_curso_service import InscricaoCursoService
-from application.services.Dtos.inscricao_curso_dto import InscricaoCursoRequestDTO, InscricaoCursoResponseDTO
+from application.dtos.inscricao_curso_dto import InscricaoCursoRequestDTO, InscricaoCursoResponseDTO
 
 
 router = APIRouter(prefix="/inscricoes-curso", tags=["InscricaoCurso"])
@@ -100,5 +100,6 @@ def delete_inscricao_curso(entity_id: UUID, service: InscricaoCursoService = Dep
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erro interno ao remover inscricao_curso: {exc}") from exc
+
 
 

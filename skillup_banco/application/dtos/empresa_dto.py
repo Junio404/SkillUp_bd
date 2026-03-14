@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class EmpresaRequestDTO(BaseRequestDTO):
@@ -16,4 +16,5 @@ class EmpresaResponseDTO(BaseResponseDTO):
     razao_social: str
     nome_fantasia: str
     cnpj: str
+
 

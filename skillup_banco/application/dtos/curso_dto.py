@@ -5,7 +5,7 @@ from typing import Optional
 from uuid import UUID
 
 from domain.entidades.enums import Modalidade
-from application.services.Dtos.base_dto import BaseRequestDTO, BaseResponseDTO
+from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class CursoRequestDTO(BaseRequestDTO):
@@ -29,4 +29,5 @@ class CursoResponseDTO(BaseResponseDTO):
     capacidade: Optional[int] = None
     prazo_inscricao: Optional[date] = None
     empresa_id: Optional[UUID] = None
+
 
