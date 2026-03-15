@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes.area_ensino_routes import router as area_ensino_router
 from api.routes.candidato_routes import router as candidato_router
@@ -15,6 +16,12 @@ from api.routes.requisito_vaga_routes import router as requisito_vaga_router
 from api.routes.vaga_routes import router as vaga_router
 
 app = FastAPI(title="SkillUp Banco API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(area_ensino_router)
 app.include_router(candidato_router)
