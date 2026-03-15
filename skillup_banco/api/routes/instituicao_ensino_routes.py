@@ -6,13 +6,17 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from api.dependencies import get_instituicao_ensino_service
 from application.services.instituicao_ensino.instituicao_ensino_service import InstituicaoEnsinoService
-from application.dtos.instituicao_ensino_dto import InstituicaoEnsinoRequestDTO, InstituicaoEnsinoResponseDTO
+from application.dtos.instituicao_ensino_dto import (
+    InstituicaoEnsinoComAreasResponseDTO,
+    InstituicaoEnsinoRequestDTO,
+    InstituicaoEnsinoResponseDTO,
+)
 
 
 router = APIRouter(prefix="/instituicoes-ensino", tags=["InstituicaoEnsino"])
 
 
-@router.get("/{registro}", response_model=InstituicaoEnsinoResponseDTO)
+@router.get("/registro/{registro}", response_model=InstituicaoEnsinoResponseDTO)
 def get_by_registro_educacional_instituicao_ensino(registro: str, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
         result = service.get_by_registro_educacional(registro=registro)
@@ -31,7 +35,7 @@ def get_by_registro_educacional_instituicao_ensino(registro: str, service: Insti
             status_code=500, detail=f"Erro interno ao executar get_by_registro_educacional: {exc}") from exc
 
 
-@router.get("/{cnpj}", response_model=InstituicaoEnsinoResponseDTO)
+@router.get("/cnpj/{cnpj}", response_model=InstituicaoEnsinoResponseDTO)
 def get_by_cnpj_instituicao_ensino(cnpj: str, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
         result = service.get_by_cnpj(cnpj=cnpj)
@@ -48,6 +52,28 @@ def get_by_cnpj_instituicao_ensino(cnpj: str, service: InstituicaoEnsinoService 
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao executar get_by_cnpj: {exc}") from exc
+
+
+@router.get("/{instituicao_ensino_id}/areas-ensino", response_model=InstituicaoEnsinoComAreasResponseDTO)
+def get_instituicao_ensino_with_areas(
+    instituicao_ensino_id: UUID,
+    service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service),
+):
+    try:
+        result = service.get_with_areas_ensino(instituicao_ensino_id)
+        if result is None:
+            raise HTTPException(
+                status_code=404, detail="Registro nao encontrado")
+        return result
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro interno ao buscar instituicao com areas de ensino: {exc}",
+        ) from exc
 
 
 @router.get("/", response_model=list[InstituicaoEnsinoResponseDTO])
@@ -94,11 +120,7 @@ def create_instituicao_ensino(payload: InstituicaoEnsinoRequestDTO, service: Ins
 @router.put("/{instituicao_ensino_id}", response_model=InstituicaoEnsinoResponseDTO)
 def update_instituicao_ensino(instituicao_ensino_id: UUID, payload: InstituicaoEnsinoRequestDTO, service: InstituicaoEnsinoService = Depends(get_instituicao_ensino_service)):
     try:
-        result = service.update(instituicao_ensino_id, payload)
-        if result is None:
-            raise HTTPException(
-                status_code=404, detail="Registro nao encontrado")
-        return result
+        return service.update(instituicao_ensino_id, payload)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except ValueError as exc:
@@ -117,6 +139,8 @@ def delete_instituicao_ensino(instituicao_ensino_id: UUID, service: InstituicaoE
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao remover instituicao_ensino: {exc}") from exc

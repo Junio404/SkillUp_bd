@@ -5,6 +5,7 @@ from uuid import UUID
 
 from sqlalchemy import text
 
+from domain.entidades.area_ensino import AreaEnsino
 from domain.entidades.instituicao_ensino import InstituicaoEnsino
 from domain.interfaces.instituicao_ensino_repository import InstituicaoEnsinoRepository
 
@@ -103,3 +104,49 @@ class InstituicaoEnsinoRepositorySql(InstituicaoEnsinoRepository):
             )
             row = result.mappings().first()
             return self._to_entity(row) if row else None
+
+    def _to_area_ensino(self, row) -> AreaEnsino:
+        entity = AreaEnsino(_nome=row["area_nome"])
+        entity._id = UUID(str(row["area_id"]))
+        return entity
+
+    def get_with_areas_ensino(self, instituicao_id: UUID) -> InstituicaoEnsino | None:
+        with self._connection.connect() as conn:
+            result = conn.execute(
+                text(
+                    """
+                    SELECT
+                        i.id,
+                        i.razaoSocial,
+                        i.registroEducacional,
+                        i.nomeFantasia,
+                        i.cnpj,
+                        i.tipo,
+                        ae.id   AS area_id,
+                        ae.nome AS area_nome
+                    FROM instituicao_ensino i
+                    LEFT JOIN instituicao_area_ensino iae
+                        ON iae.instituicao_id = i.id
+                    LEFT JOIN area_ensino ae
+                        ON ae.id = iae.area_ensino_id
+                    WHERE i.id = :instituicao_id
+                    ORDER BY ae.nome
+                    """
+                ),
+                {"instituicao_id": str(instituicao_id)},
+            )
+
+            rows = result.mappings().all()
+
+            if not rows:
+                return None
+
+            instituicao = self._to_entity(rows[0])
+
+            areas: list[AreaEnsino] = []
+            for row in rows:
+                if row["area_id"] is not None:
+                    areas.append(self._to_area_ensino(row))
+
+            instituicao.definir_areas_ensino(areas)
+            return instituicao

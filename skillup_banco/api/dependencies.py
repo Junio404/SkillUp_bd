@@ -120,12 +120,20 @@ def get_instituicao_area_ensino_repository() -> InstituicaoAreaEnsinoRepository:
     return InstituicaoAreaEnsinoRepositorySql(connection=engine)
 
 
-def get_instituicao_area_ensino_service(repository: InstituicaoAreaEnsinoRepository = Depends(get_instituicao_area_ensino_repository)) -> InstituicaoAreaEnsinoService:
-    return InstituicaoAreaEnsinoService(repository=repository)
-
-
 def get_instituicao_ensino_repository() -> InstituicaoEnsinoRepository:
     return InstituicaoEnsinoRepositorySql(connection=engine)
+
+
+def get_instituicao_area_ensino_service(
+    repository: InstituicaoAreaEnsinoRepository = Depends(get_instituicao_area_ensino_repository),
+    instituicao_ensino_repository: InstituicaoEnsinoRepository = Depends(get_instituicao_ensino_repository),
+    area_ensino_repository: AreaEnsinoRepository = Depends(get_area_ensino_repository),
+) -> InstituicaoAreaEnsinoService:
+    return InstituicaoAreaEnsinoService(
+        repository=repository,
+        instituicao_ensino_repository=instituicao_ensino_repository,
+        area_ensino_repository=area_ensino_repository,
+    )
 
 
 def get_instituicao_ensino_service(repository: InstituicaoEnsinoRepository = Depends(get_instituicao_ensino_repository)) -> InstituicaoEnsinoService:

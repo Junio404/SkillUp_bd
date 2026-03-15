@@ -86,7 +86,7 @@ class TestCandidaturaServices(unittest.TestCase):
         )
 
         self.assertTrue(self.repo.exists(candidatura.id))
-        self.assertEqual(candidatura.status, StatusCandidatura.ENVIADO)
+        self.assertEqual(candidatura.status, StatusCandidatura.ENVIADO.value)
         self.assertIsInstance(candidatura.data_candidatura, datetime)
 
     def test_criar_candidatura_duplicada_dispara_erro(self) -> None:
@@ -137,7 +137,7 @@ class TestCandidaturaServices(unittest.TestCase):
             novo_status=StatusCandidatura.ACEITO,
         )
 
-        self.assertEqual(atualizada.status, StatusCandidatura.ACEITO)
+        self.assertEqual(atualizada.status, StatusCandidatura.ACEITO.value)
 
     def test_atualizar_status_inexistente_dispara_erro(self) -> None:
         with self.assertRaises(ValueError):

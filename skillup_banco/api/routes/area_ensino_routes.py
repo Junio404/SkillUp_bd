@@ -12,7 +12,7 @@ from application.dtos.area_ensino_dto import AreaEnsinoRequestDTO, AreaEnsinoRes
 router = APIRouter(prefix="/areas-ensino", tags=["AreaEnsino"])
 
 
-@router.get("/{nome}", response_model=AreaEnsinoResponseDTO)
+@router.get("/nome/{nome}", response_model=AreaEnsinoResponseDTO)
 def get_by_nome_area_ensino(nome: str, service: AreaEnsinoService = Depends(get_area_ensino_service)):
     try:
         result = service.get_by_nome(nome=nome)
@@ -75,17 +75,11 @@ def create_area_ensino(payload: AreaEnsinoRequestDTO, service: AreaEnsinoService
 @router.put("/{area_ensino_id}", response_model=AreaEnsinoResponseDTO)
 def update_area_ensino(area_ensino_id: UUID, payload: AreaEnsinoRequestDTO, service: AreaEnsinoService = Depends(get_area_ensino_service)):
     try:
-        result = service.update(area_ensino_id, payload)
-        if result is None:
-            raise HTTPException(
-                status_code=404, detail="Registro nao encontrado")
-        return result
+        return service.update(area_ensino_id, payload)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except HTTPException:
-        raise
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao atualizar area_ensino: {exc}") from exc
@@ -98,6 +92,8 @@ def delete_area_ensino(area_ensino_id: UUID, service: AreaEnsinoService = Depend
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=500, detail=f"Erro interno ao remover area_ensino: {exc}") from exc
