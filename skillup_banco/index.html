@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">Skill<span>Up</span></div>
+  <div class="profile-tabs">
+    <button class="profile-tab active" data-profile="candidato" onclick="switchProfile('candidato')">Candidato</button>
+    <button class="profile-tab" data-profile="empresa" onclick="switchProfile('empresa')">Empresa</button>
+    <button class="profile-tab" data-profile="instituicao" onclick="switchProfile('instituicao')">Instituição</button>
+  </div>
+  <div class="api-badge">
+    <div class="dot" id="api-dot"></div>
+    <span id="api-status">verificando API...</span>
+  </div>
+</header>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar"></aside>
+
+  <!-- Main -->
+  <main id="main-content"></main>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Modal Edição Candidatura -->
+<div class="modal-overlay" id="modal-status">
+  <div class="modal">
+    <div class="modal-title">Atualizar status da candidatura</div>
+    <div class="field" style="margin-bottom:20px">
+      <label>Novo status</label>
+      <select id="modal-status-select" class="status-select" style="font-size:13px;padding:9px 12px">
+        <option value="0">Enviado</option>
+        <option value="1">Em análise</option>
+        <option value="2">Aceito</option>
+        <option value="3">Recusado</option>
+        <option value="4">Cancelado</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="confirmStatusUpdate()">Salvar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-status')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="scripts.js"></script>
+</body>
+</html>
