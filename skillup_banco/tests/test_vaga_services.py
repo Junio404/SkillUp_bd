@@ -47,10 +47,10 @@ class TestVagaService(unittest.TestCase):
         defaults = dict(
             titulo="Desenvolvedor Python Pleno",
             descricao="Vaga para atuar no backend com FastAPI e Clean Architecture.",
-              modalidade=Modalidade.REMOTO,
-              tipo=TipoVaga.EMPREGO,
-              prazo_inscricao=date(2026, 12, 31),
-              empresa_id=uuid4(),
+            modalidade=Modalidade.REMOTO,
+            tipo=TipoVaga.EMPREGO,
+            prazo_inscricao=date(2026, 12, 31),
+            empresa_id=uuid4(),
         )
         defaults.update(overrides)
         return VagaRequestDTO(**defaults)
@@ -59,10 +59,10 @@ class TestVagaService(unittest.TestCase):
         defaults = dict(
             _titulo="Engenheiro de Dados Sênior",
             _descricao="Atuação com AWS, Spark e Airflow.",
-              _modalidade=Modalidade.PRESENCIAL,
-              _tipo=TipoVaga.EMPREGO,
-              _prazo_inscricao=date(2026, 12, 31),
-              _empresa_id=uuid4(),
+            _modalidade=Modalidade.PRESENCIAL,
+            _tipo=TipoVaga.EMPREGO,
+            _prazo_inscricao=date(2026, 12, 31),
+            _empresa_id=uuid4(),
         )
         defaults.update(overrides)
         entity = Vaga(**defaults)
@@ -99,10 +99,11 @@ class TestVagaService(unittest.TestCase):
     def test_listar_todas(self) -> None:
         self._nova_vaga(_titulo="Vaga 1")
         self._nova_vaga(_titulo="Vaga 2")
+        self._nova_vaga(_titulo="Vaga 3")
 
         resultado = self.service.list_all()
 
-        self.assertEqual(len(resultado), 2)
+        self.assertEqual(len(resultado), 3)
 
     # ── UPDATE ──────────────────────────────────────────────
 
@@ -142,22 +143,13 @@ class TestVagaService(unittest.TestCase):
         empresa_alvo = uuid4()
         self._nova_vaga(_empresa_id=empresa_alvo)
         self._nova_vaga(_empresa_id=empresa_alvo)
-        self._nova_vaga(_empresa_id=uuid4()) # Empresa diferente
+        self._nova_vaga(_empresa_id=uuid4())
 
         resultado = self.service.list_by_empresa(empresa_alvo)
 
         self.assertEqual(len(resultado), 2)
         for v in resultado:
             self.assertEqual(v.empresa_id, empresa_alvo)
-
-        def test_listar_todas_vagas(self) -> None:
-            self._nova_vaga(_titulo="Vaga 1")
-            self._nova_vaga(_titulo="Vaga 2")
-            self._nova_vaga(_titulo="Vaga 3")
-
-            resultado = self.service.list_all()
-
-            self.assertEqual(len(resultado), 3)
 
 
 if __name__ == "__main__":
