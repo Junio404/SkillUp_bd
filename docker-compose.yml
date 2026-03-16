@@ -17,17 +17,6 @@ services:
       retries: 10
       start_period: 30s
 
-  app:
-    build: .
-    container_name: skillup_app
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-    ports:
-      - "8000:8000"
-
   db-init:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: skillup_db_init
@@ -40,6 +29,19 @@ services:
       /bin/bash -c "
       /opt/mssql-tools18/bin/sqlcmd -S db -U sa -P '${DB_PASSWORD}' -C -i /tmp/script.sql;
       echo 'Inicialização do banco concluída!';"
+
+  app:
+    build: .
+    container_name: skillup_app
+    depends_on:
+      db:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "8000:8000"
 
 volumes:
   sqlserver_data:
