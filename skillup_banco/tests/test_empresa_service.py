@@ -49,6 +49,7 @@ class TestEmpresaService(unittest.TestCase):
             razao_social="Empresa Exemplo LTDA",
             nome_fantasia="Exemplo Tech",
             cnpj="12345678000199",
+            senha="SenhaForte123!",
         )
         defaults.update(overrides)
         return EmpresaRequestDTO(**defaults)
@@ -58,6 +59,7 @@ class TestEmpresaService(unittest.TestCase):
             _razao_social="Empresa Teste S.A",
             _nome_fantasia="Teste Corp",
             _cnpj="98765432000188",
+            _senha_hash="hash_teste",
         )
         defaults.update(overrides)
         entity = Empresa(**defaults)

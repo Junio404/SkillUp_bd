@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import unittest
+from datetime import date
 from uuid import UUID, uuid4
 
 from application.services.vaga import VagaService
 from application.dtos.vaga_dto import VagaRequestDTO
 from domain.entidades.vaga import Vaga
+from domain.entidades.enums import Modalidade, TipoVaga
 from domain.interfaces.vaga_repository import VagaRepository
 
 
@@ -35,9 +37,6 @@ class FakeVagaRepository(VagaRepository):
     def list_by_empresa(self, empresa_id: UUID) -> list[Vaga]:
         return [item for item in self._items.values() if item.empresa_id == empresa_id]
 
-    def list_ativas(self) -> list[Vaga]:
-        return [item for item in self._items.values() if item.ativa]
-
 
 class TestVagaService(unittest.TestCase):
     def setUp(self) -> None:
@@ -48,9 +47,10 @@ class TestVagaService(unittest.TestCase):
         defaults = dict(
             titulo="Desenvolvedor Python Pleno",
             descricao="Vaga para atuar no backend com FastAPI e Clean Architecture.",
-            salario=8000.0,
-            empresa_id=uuid4(),
-            ativa=True,
+              modalidade=Modalidade.REMOTO,
+              tipo=TipoVaga.EMPREGO,
+              prazo_inscricao=date(2026, 12, 31),
+              empresa_id=uuid4(),
         )
         defaults.update(overrides)
         return VagaRequestDTO(**defaults)
@@ -59,9 +59,10 @@ class TestVagaService(unittest.TestCase):
         defaults = dict(
             _titulo="Engenheiro de Dados Sênior",
             _descricao="Atuação com AWS, Spark e Airflow.",
-            _salario=12000.0,
-            _empresa_id=uuid4(),
-            _ativa=True,
+              _modalidade=Modalidade.PRESENCIAL,
+              _tipo=TipoVaga.EMPREGO,
+              _prazo_inscricao=date(2026, 12, 31),
+              _empresa_id=uuid4(),
         )
         defaults.update(overrides)
         entity = Vaga(**defaults)
@@ -77,7 +78,6 @@ class TestVagaService(unittest.TestCase):
         self.assertTrue(self.repo.exists(resultado.id))
         self.assertEqual(resultado.titulo, "Desenvolvedor Python Pleno")
         self.assertEqual(resultado.empresa_id, empresa_alvo)
-        self.assertTrue(resultado.ativa)
 
     # ── GET BY ID ───────────────────────────────────────────
 
@@ -114,12 +114,10 @@ class TestVagaService(unittest.TestCase):
             self._novo_request(
                 titulo="Título Atualizado",
                 empresa_id=vaga.empresa_id,
-                ativa=False # Testando fechamento de vaga
             ),
         )
 
         self.assertEqual(atualizada.titulo, "Título Atualizado")
-        self.assertFalse(atualizada.ativa)
 
     def test_atualizar_vaga_inexistente_dispara_erro(self) -> None:
         with self.assertRaises(ValueError):
@@ -152,16 +150,14 @@ class TestVagaService(unittest.TestCase):
         for v in resultado:
             self.assertEqual(v.empresa_id, empresa_alvo)
 
-    def test_listar_vagas_ativas(self) -> None:
-        self._nova_vaga(_ativa=True)
-        self._nova_vaga(_ativa=True)
-        self._nova_vaga(_ativa=False) # Vaga fechada
+        def test_listar_todas_vagas(self) -> None:
+            self._nova_vaga(_titulo="Vaga 1")
+            self._nova_vaga(_titulo="Vaga 2")
+            self._nova_vaga(_titulo="Vaga 3")
 
-        resultado = self.service.list_ativas()
+            resultado = self.service.list_all()
 
-        self.assertEqual(len(resultado), 2)
-        for v in resultado:
-            self.assertTrue(v.ativa)
+            self.assertEqual(len(resultado), 3)
 
 
 if __name__ == "__main__":

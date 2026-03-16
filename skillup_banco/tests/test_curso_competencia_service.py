@@ -70,7 +70,7 @@ class TestCursoCompetenciaService(unittest.TestCase):
         resultado = self.service.create(self._novo_request())
 
         self.assertTrue(self.repo.exists(resultado.id))
-        self.assertEqual(resultado.nivel, Nivel.MEDIA)
+        self.assertEqual(resultado.nivel, Nivel.MEDIA.value)
         self.assertEqual(resultado.curso_id, self.curso_id)
         self.assertEqual(resultado.competencia_id, self.competencia_id)
 
@@ -89,7 +89,7 @@ class TestCursoCompetenciaService(unittest.TestCase):
 
         self.assertIsNotNone(resultado)
         self.assertEqual(resultado.id, competencia.id)
-        self.assertEqual(resultado.nivel, Nivel.ALTA)
+        self.assertEqual(resultado.nivel, Nivel.ALTA.value)
 
     def test_obter_por_id_inexistente_retorna_none(self) -> None:
         resultado = self.service.get_by_id(uuid4())
@@ -115,7 +115,7 @@ class TestCursoCompetenciaService(unittest.TestCase):
             self._novo_request(nivel=Nivel.BAIXA),
         )
 
-        self.assertEqual(atualizado.nivel, Nivel.BAIXA)
+        self.assertEqual(atualizado.nivel, Nivel.BAIXA.value)
 
     def test_atualizar_inexistente_dispara_erro(self) -> None:
         with self.assertRaises(ValueError):

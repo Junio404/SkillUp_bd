@@ -1,14 +1,14 @@
 -- ------------------------------------------------------------
 -- 1. CRIAR E SELECIONAR O BANCO
 -- ------------------------------------------------------------
-IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'SkillUp')
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'SistemaLaboral')
 BEGIN
-    CREATE DATABASE SkillUp
+    CREATE DATABASE SistemaLaboral
     COLLATE Latin1_General_CI_AI;
 END
 GO
 
-USE SkillUp;
+USE SistemaLaboral;
 GO
 
 -- ============================================================
@@ -51,10 +51,19 @@ CREATE TABLE dbo.EMPRESA (
     razaoSocial  VARCHAR(200)     NOT NULL,
     nomeFantasia VARCHAR(150)     NULL,
     cnpj         CHAR(14)         NOT NULL,
+    senha_hash   VARCHAR(255)     NOT NULL,
 
     CONSTRAINT PK_EMPRESA PRIMARY KEY (id),
     CONSTRAINT UQ_EMPRESA_cnpj UNIQUE (cnpj)
 );
+GO
+
+IF COL_LENGTH('dbo.EMPRESA', 'senha_hash') IS NULL
+BEGIN
+    ALTER TABLE dbo.EMPRESA ADD senha_hash VARCHAR(255) NULL;
+    UPDATE dbo.EMPRESA SET senha_hash = 'legacy_hash' WHERE senha_hash IS NULL;
+    ALTER TABLE dbo.EMPRESA ALTER COLUMN senha_hash VARCHAR(255) NOT NULL;
+END
 GO
 
 -- ------------------------------------------------------------
@@ -66,6 +75,7 @@ CREATE TABLE dbo.CANDIDATO (
     nome           VARCHAR(150)     NOT NULL,
     cpf            CHAR(11)         NOT NULL,
     email          VARCHAR(150)     NOT NULL,
+    senha_hash     VARCHAR(255)     NOT NULL,
     areaInteresse  VARCHAR(100)     NULL,
     nivelFormacao  VARCHAR(100)     NULL,
     curriculo_url  VARCHAR(300)     NULL,
@@ -74,6 +84,14 @@ CREATE TABLE dbo.CANDIDATO (
     CONSTRAINT UQ_CANDIDATO_cpf   UNIQUE (cpf),
     CONSTRAINT UQ_CANDIDATO_email UNIQUE (email)
 );
+GO
+
+IF COL_LENGTH('dbo.CANDIDATO', 'senha_hash') IS NULL
+BEGIN
+    ALTER TABLE dbo.CANDIDATO ADD senha_hash VARCHAR(255) NULL;
+    UPDATE dbo.CANDIDATO SET senha_hash = 'legacy_hash' WHERE senha_hash IS NULL;
+    ALTER TABLE dbo.CANDIDATO ALTER COLUMN senha_hash VARCHAR(255) NOT NULL;
+END
 GO
 
 -- ------------------------------------------------------------
@@ -313,5 +331,5 @@ GO
 
 GO
 
-PRINT 'Banco SkillUp criado com sucesso!';
+PRINT 'Banco SistemaLaboral criado com sucesso!';
 GO

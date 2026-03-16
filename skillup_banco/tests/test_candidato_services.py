@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import unittest
-from datetime import date
 from uuid import UUID, uuid4
 
 from application.services.candidato import CandidatoService
@@ -45,6 +44,9 @@ class FakeCandidatoRepository(CandidatoRepository):
                 return item
         return None
 
+    def get_with_candidaturas(self, candidato_id: UUID) -> Candidato | None:
+        return self.get_by_id(candidato_id)
+
 
 class TestCandidatoService(unittest.TestCase):
     def setUp(self) -> None:
@@ -56,7 +58,7 @@ class TestCandidatoService(unittest.TestCase):
             nome="Candidato Exemplo",
             cpf="12345678901",
             email="candidato@exemplo.com",
-            data_nascimento=date(1995, 5, 20),
+            senha="SenhaForte123!",
         )
         defaults.update(overrides)
         return CandidatoRequestDTO(**defaults)
@@ -66,7 +68,7 @@ class TestCandidatoService(unittest.TestCase):
             _nome="Candidato Teste",
             _cpf="98765432100",
             _email="teste@exemplo.com",
-            _data_nascimento=date(1990, 1, 1),
+            _senha_hash="hash_teste",
         )
         defaults.update(overrides)
         entity = Candidato(**defaults)
