@@ -25,8 +25,10 @@ class CandidaturaService:
         if candidatura_existente is not None:
             raise ValueError("Candidato ja possui candidatura para essa vaga")
 
+        data_candidatura = payload.data_candidatura or datetime.now()
+
         candidatura = Candidatura(
-            _data_candidatura=payload.data_candidatura,
+            _data_candidatura=data_candidatura,
             _status=StatusCandidatura(payload.status),
             _candidato_id=payload.candidato_id,
             _vaga_id=payload.vaga_id,
