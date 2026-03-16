@@ -3,28 +3,28 @@ from __future__ import annotations
 import unittest
 from uuid import UUID, uuid4
 
-from application.services.requisito_vaga import RequisitoVagaService
-from application.dtos.requisito_vaga_dto import RequisitoVagaRequestDTO
-from domain.entidades.requisito_vaga import RequisitoVaga
+from application.services.curso_competencia import CursoCompetenciaService
+from application.dtos.curso_competencia_dto import CursoCompetenciaRequestDTO
+from domain.entidades.curso_competencia import CursoCompetencia
 from domain.entidades.enums import Nivel
-from domain.interfaces.requisito_vaga_repository import RequisitoVagaRepository
+from domain.interfaces.curso_competencia_repository import CursoCompetenciaRepository
 
 
-class FakeRequisitoVagaRepository(RequisitoVagaRepository):
+class FakeCursoCompetenciaRepository(CursoCompetenciaRepository):
     def __init__(self) -> None:
         super().__init__(connection=None)
-        self._items: dict[UUID, RequisitoVaga] = {}
+        self._items: dict[UUID, CursoCompetencia] = {}
 
-    def add(self, entity: RequisitoVaga) -> None:
+    def add(self, entity: CursoCompetencia) -> None:
         self._items[entity.id] = entity
 
-    def get_by_id(self, entity_id: UUID) -> RequisitoVaga | None:
+    def get_by_id(self, entity_id: UUID) -> CursoCompetencia | None:
         return self._items.get(entity_id)
 
-    def list_all(self) -> list[RequisitoVaga]:
+    def list_all(self) -> list[CursoCompetencia]:
         return list(self._items.values())
 
-    def update(self, entity: RequisitoVaga) -> None:
+    def update(self, entity: CursoCompetencia) -> None:
         self._items[entity.id] = entity
 
     def remove(self, entity_id: UUID) -> None:
@@ -33,49 +33,49 @@ class FakeRequisitoVagaRepository(RequisitoVagaRepository):
     def exists(self, entity_id: UUID) -> bool:
         return entity_id in self._items
 
-    def list_by_vaga(self, vaga_id: UUID) -> list[RequisitoVaga]:
-        return [item for item in self._items.values() if item.vaga_id == vaga_id]
+    def list_by_curso(self, curso_id: UUID) -> list[CursoCompetencia]:
+        return [item for item in self._items.values() if item.curso_id == curso_id]
 
 
-class TestRequisitoVagaService(unittest.TestCase):
+class TestCursoCompetenciaService(unittest.TestCase):
     def setUp(self) -> None:
-        self.repo = FakeRequisitoVagaRepository()
-        self.service = RequisitoVagaService(self.repo)
-        self.vaga_id = uuid4()
+        self.repo = FakeCursoCompetenciaRepository()
+        self.service = CursoCompetenciaService(self.repo)
+        self.curso_id = uuid4()
         self.competencia_id = uuid4()
 
-    def _novo_request(self, **overrides) -> RequisitoVagaRequestDTO:
+    def _novo_request(self, **overrides) -> CursoCompetenciaRequestDTO:
         defaults = dict(
             nivel=Nivel.MEDIA,
-            vaga_id=self.vaga_id,
+            curso_id=self.curso_id,
             competencia_id=self.competencia_id,
         )
         defaults.update(overrides)
-        return RequisitoVagaRequestDTO(**defaults)
+        return CursoCompetenciaRequestDTO(**defaults)
 
-    def _novo_requisito_vaga(self, **overrides) -> RequisitoVaga:
+    def _nova_curso_competencia(self, **overrides) -> CursoCompetencia:
         defaults = dict(
             _nivel=Nivel.ALTA,
-            _vaga_id=self.vaga_id,
+            _curso_id=self.curso_id,
             _competencia_id=self.competencia_id,
         )
         defaults.update(overrides)
-        entity = RequisitoVaga(**defaults)
+        entity = CursoCompetencia(**defaults)
         self.repo.add(entity)
         return entity
 
     # ── CREATE ──────────────────────────────────────────────
 
-    def test_criar_requisito_vaga_com_sucesso(self) -> None:
+    def test_criar_curso_competencia_com_sucesso(self) -> None:
         resultado = self.service.create(self._novo_request())
 
         self.assertTrue(self.repo.exists(resultado.id))
         self.assertEqual(resultado.nivel, Nivel.MEDIA)
-        self.assertEqual(resultado.vaga_id, self.vaga_id)
+        self.assertEqual(resultado.curso_id, self.curso_id)
         self.assertEqual(resultado.competencia_id, self.competencia_id)
 
-    def test_criar_requisito_vaga_duplicado_dispara_erro(self) -> None:
-        self._novo_requisito_vaga(_competencia_id=self.competencia_id)
+    def test_criar_curso_competencia_duplicada_dispara_erro(self) -> None:
+        self._nova_curso_competencia(_competencia_id=self.competencia_id)
 
         with self.assertRaises(ValueError):
             self.service.create(self._novo_request(competencia_id=self.competencia_id))
@@ -83,12 +83,12 @@ class TestRequisitoVagaService(unittest.TestCase):
     # ── GET BY ID ───────────────────────────────────────────
 
     def test_obter_por_id_existente(self) -> None:
-        requisito = self._novo_requisito_vaga()
+        competencia = self._nova_curso_competencia()
 
-        resultado = self.service.get_by_id(requisito.id)
+        resultado = self.service.get_by_id(competencia.id)
 
         self.assertIsNotNone(resultado)
-        self.assertEqual(resultado.id, requisito.id)
+        self.assertEqual(resultado.id, competencia.id)
         self.assertEqual(resultado.nivel, Nivel.ALTA)
 
     def test_obter_por_id_inexistente_retorna_none(self) -> None:
@@ -98,8 +98,8 @@ class TestRequisitoVagaService(unittest.TestCase):
     # ── LIST ALL ────────────────────────────────────────────
 
     def test_listar_todos(self) -> None:
-        self._novo_requisito_vaga(_competencia_id=uuid4())
-        self._novo_requisito_vaga(_competencia_id=uuid4())
+        self._nova_curso_competencia(_competencia_id=uuid4())
+        self._nova_curso_competencia(_competencia_id=uuid4())
 
         resultado = self.service.list_all()
 
@@ -107,11 +107,11 @@ class TestRequisitoVagaService(unittest.TestCase):
 
     # ── UPDATE ──────────────────────────────────────────────
 
-    def test_atualizar_requisito_vaga_com_sucesso(self) -> None:
-        requisito = self._novo_requisito_vaga()
+    def test_atualizar_curso_competencia_com_sucesso(self) -> None:
+        competencia = self._nova_curso_competencia()
 
         atualizado = self.service.update(
-            requisito.id,
+            competencia.id,
             self._novo_request(nivel=Nivel.BAIXA),
         )
 
@@ -124,11 +124,11 @@ class TestRequisitoVagaService(unittest.TestCase):
     # ── DELETE ──────────────────────────────────────────────
 
     def test_deletar_com_sucesso(self) -> None:
-        requisito = self._novo_requisito_vaga()
+        competencia = self._nova_curso_competencia()
 
-        self.service.delete(requisito.id)
+        self.service.delete(competencia.id)
 
-        self.assertFalse(self.repo.exists(requisito.id))
+        self.assertFalse(self.repo.exists(competencia.id))
 
     def test_deletar_inexistente_dispara_erro(self) -> None:
         with self.assertRaises(ValueError):
@@ -136,26 +136,26 @@ class TestRequisitoVagaService(unittest.TestCase):
 
     # ── BUSCAS ESPECÍFICAS ──────────────────────────────────
 
-    def test_listar_por_vaga(self) -> None:
-        vaga_id = uuid4()
-        self._novo_requisito_vaga(
-            _vaga_id=vaga_id,
+    def test_listar_por_curso(self) -> None:
+        curso_id = uuid4()
+        self._nova_curso_competencia(
+            _curso_id=curso_id,
             _competencia_id=uuid4(),
         )
-        self._novo_requisito_vaga(
-            _vaga_id=vaga_id,
+        self._nova_curso_competencia(
+            _curso_id=curso_id,
             _competencia_id=uuid4(),
         )
-        self._novo_requisito_vaga(
-            _vaga_id=uuid4(),
+        self._nova_curso_competencia(
+            _curso_id=uuid4(),
             _competencia_id=uuid4(),
         )
 
-        resultado = self.service.list_by_vaga(vaga_id)
+        resultado = self.service.list_by_curso(curso_id)
 
         self.assertEqual(len(resultado), 2)
         for item in resultado:
-            self.assertEqual(item.vaga_id, vaga_id)
+            self.assertEqual(item.curso_id, curso_id)
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ class VagaService:
     def update(self, vaga_id: UUID, payload: VagaRequestDTO) -> VagaResponseDTO | None:
         entity = self._repository.get_by_id(vaga_id)
         if entity is None:
-            raise ValueError("Vaga nao encontrada")
+            raise ValueError("Vaga não encontrada")
         
         entity = apply_update(entity, payload)
         self._repository.update(entity)
@@ -43,7 +43,7 @@ class VagaService:
 
     def delete(self, vaga_id: UUID) -> None:
         if not self._repository.exists(vaga_id):
-            raise ValueError("Vaga nao encontrada")
+            raise ValueError("Vaga não encontrada")
         
         self._repository.remove(vaga_id)
 
