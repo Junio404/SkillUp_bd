@@ -22,12 +22,12 @@ class InstituicaoEnsino:
     def __post_init__(self):
         if not self._razao_social:
             raise ValueError("Razão social não pode ser vazia")
-        
-        if not isinstance(self._cnpj, str) or len(self._cnpj) != 14 or not self._cnpj.isdigit():
-            raise ValueError("CNPJ inválido.")
 
         if not self._registro_educacional:
             raise ValueError("Registro educacional não pode ser vazio")
+
+        if self._cnpj is not None and (len(self._cnpj) != 14 or not self._cnpj.isdigit()):
+            raise ValueError("CNPJ inválido: deve conter exatamente 14 dígitos numéricos.")
 
     @property
     def id(self) -> UUID:
