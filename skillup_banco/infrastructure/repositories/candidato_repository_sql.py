@@ -18,6 +18,7 @@ class CandidatoRepositorySql(CandidatoRepository):
             _nome=row["nome"],
             _cpf=row["cpf"],
             _email=row["email"],
+            _senha_hash=row["senha_hash"],
             _area_interesse=row["areaInteresse"],
             _nivel_formacao=row["nivelFormacao"],
             _curriculo_url=row["curriculo_url"],
@@ -39,12 +40,15 @@ class CandidatoRepositorySql(CandidatoRepository):
         return candidatura
 
     def add(self, entity: Candidato) -> None:
+        if not entity.senha_hash:
+            raise ValueError("Senha hash obrigatoria para criar candidato")
+
         with self._connection.begin() as conn:
             conn.execute(
                 text(
-                    "INSERT INTO candidato (id, nome, cpf, email, areaInteresse, "
+                    "INSERT INTO candidato (id, nome, cpf, email, senha_hash, areaInteresse, "
                     "nivelFormacao, curriculo_url) "
-                    "VALUES (:id, :nome, :cpf, :email, :area_interesse, "
+                    "VALUES (:id, :nome, :cpf, :email, :senha_hash, :area_interesse, "
                     ":nivel_formacao, :curriculo_url)"
                 ),
                 {
@@ -52,6 +56,7 @@ class CandidatoRepositorySql(CandidatoRepository):
                     "nome": entity.nome,
                     "cpf": entity.cpf,
                     "email": entity.email,
+                    "senha_hash": entity.senha_hash,
                     "area_interesse": entity.area_interesse,
                     "nivel_formacao": entity.nivel_formacao,
                     "curriculo_url": entity.curriculo_url,
@@ -77,6 +82,7 @@ class CandidatoRepositorySql(CandidatoRepository):
             conn.execute(
                 text(
                     "UPDATE candidato SET nome = :nome, email = :email, "
+                    "senha_hash = :senha_hash, "
                     "areaInteresse = :area_interesse, nivelFormacao = :nivel_formacao, "
                     "curriculo_url = :curriculo_url WHERE id = :id"
                 ),
@@ -84,6 +90,7 @@ class CandidatoRepositorySql(CandidatoRepository):
                     "id": str(entity.id),
                     "nome": entity.nome,
                     "email": entity.email,
+                    "senha_hash": entity.senha_hash,
                     "area_interesse": entity.area_interesse,
                     "nivel_formacao": entity.nivel_formacao,
                     "curriculo_url": entity.curriculo_url,

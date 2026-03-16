@@ -14,6 +14,7 @@ class EmpresaRequestDTO(BaseRequestDTO):
     razao_social: str = Field(min_length=2, max_length=200)
     nome_fantasia: str = Field(min_length=2, max_length=150)
     cnpj: str = Field(min_length=14, max_length=14, pattern=r"^\d{14}$")
+    senha: str | None = Field(default=None, min_length=8, max_length=128)
 
     @field_validator("razao_social", "nome_fantasia")
     @classmethod
@@ -21,6 +22,16 @@ class EmpresaRequestDTO(BaseRequestDTO):
         cleaned = value.strip()
         if not cleaned:
             raise ValueError("Campo nao pode ser vazio")
+        return cleaned
+
+    @field_validator("senha")
+    @classmethod
+    def validate_senha(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        if len(cleaned) < 8:
+            raise ValueError("Senha deve ter no minimo 8 caracteres")
         return cleaned
 
 

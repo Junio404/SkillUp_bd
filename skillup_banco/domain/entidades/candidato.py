@@ -14,6 +14,7 @@ class Candidato:
     _nome: str
     _cpf: str
     _email: str
+    _senha_hash: str | None = None
     _area_interesse: Optional[str] = None
     _nivel_formacao: Optional[str] = None
     _curriculo_url: Optional[str] = None
@@ -57,6 +58,14 @@ class Candidato:
         if not valor:
             raise ValueError("Email não pode ser vazio")
         self._email = valor
+
+    @property
+    def senha_hash(self) -> str | None:
+        return self._senha_hash
+
+    @senha_hash.setter
+    def senha_hash(self, valor: str | None):
+        self._senha_hash = valor
 
     @property
     def area_interesse(self) -> Optional[str]:

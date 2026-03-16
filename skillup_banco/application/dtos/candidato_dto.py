@@ -14,6 +14,7 @@ class CandidatoRequestDTO(BaseRequestDTO):
     nome: str = Field(min_length=2, max_length=150)
     cpf: str = Field(min_length=11, max_length=11, pattern=r"^\d{11}$")
     email: str = Field(min_length=5, max_length=150)
+    senha: str | None = Field(default=None, min_length=8, max_length=128)
     area_interesse: Optional[str] = Field(default=None, max_length=100)
     nivel_formacao: Optional[str] = Field(default=None, max_length=100)
     curriculo_url: Optional[str] = Field(default=None, max_length=300)
@@ -35,6 +36,16 @@ class CandidatoRequestDTO(BaseRequestDTO):
         local, _, domain = cleaned.partition("@")
         if not local or "." not in domain:
             raise ValueError("Email invalido")
+        return cleaned
+
+    @field_validator("senha")
+    @classmethod
+    def validate_senha(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        if len(cleaned) < 8:
+            raise ValueError("Senha deve ter no minimo 8 caracteres")
         return cleaned
 
     @field_validator("area_interesse", "nivel_formacao", "curriculo_url")

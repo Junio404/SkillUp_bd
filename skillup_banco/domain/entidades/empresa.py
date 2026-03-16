@@ -8,6 +8,7 @@ class Empresa:
     _razao_social: str
     _nome_fantasia: str
     _cnpj: str
+    _senha_hash: str | None = None
     _id: UUID = field(default_factory=uuid.uuid4, init=False)
 
     def __post_init__(self):
@@ -47,6 +48,14 @@ class Empresa:
     @property
     def cnpj(self) -> str:
         return self._cnpj
+
+    @property
+    def senha_hash(self) -> str | None:
+        return self._senha_hash
+
+    @senha_hash.setter
+    def senha_hash(self, valor: str | None):
+        self._senha_hash = valor
 
     def publicar_vaga(self) -> None:
         raise NotImplementedError

@@ -16,22 +16,27 @@ class EmpresaRepositorySql(EmpresaRepository):
             _razao_social=row["razaoSocial"],
             _nome_fantasia=row["nomeFantasia"],
             _cnpj=row["cnpj"],
+            _senha_hash=row["senha_hash"],
         )
         entity._id = UUID(str(row["id"]))
         return entity
 
     def add(self, entity: Empresa) -> None:
+        if not entity.senha_hash:
+            raise ValueError("Senha hash obrigatoria para criar empresa")
+
         with self._connection.begin() as conn:
             conn.execute(
                 text(
-                    "INSERT INTO empresa (id, razaoSocial, nomeFantasia, cnpj) "
-                    "VALUES (:id, :razao_social, :nome_fantasia, :cnpj)"
+                    "INSERT INTO empresa (id, razaoSocial, nomeFantasia, cnpj, senha_hash) "
+                    "VALUES (:id, :razao_social, :nome_fantasia, :cnpj, :senha_hash)"
                 ),
                 {
                     "id": str(entity.id),
                     "razao_social": entity.razao_social,
                     "nome_fantasia": entity.nome_fantasia,
                     "cnpj": entity.cnpj,
+                    "senha_hash": entity.senha_hash,
                 },
             )
 
@@ -54,12 +59,13 @@ class EmpresaRepositorySql(EmpresaRepository):
             conn.execute(
                 text(
                     "UPDATE empresa SET razaoSocial = :razao_social, "
-                    "nomeFantasia = :nome_fantasia WHERE id = :id"
+                    "nomeFantasia = :nome_fantasia, senha_hash = :senha_hash WHERE id = :id"
                 ),
                 {
                     "id": str(entity.id),
                     "razao_social": entity.razao_social,
                     "nome_fantasia": entity.nome_fantasia,
+                    "senha_hash": entity.senha_hash,
                 },
             )
 

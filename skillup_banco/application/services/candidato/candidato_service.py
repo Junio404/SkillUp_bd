@@ -14,6 +14,7 @@ from application.dtos.mapper import (
     apply_update,
     build_entity
 )
+from application.security.password_hasher import hash_password
 
 from domain.entidades.candidato import Candidato
 from domain.interfaces.candidato_repository import CandidatoRepository
@@ -32,7 +33,11 @@ class CandidatoService:
         if candidato_por_email is not None:
             raise ValueError("Ja existe candidato com esse email")
 
+        if not payload.senha:
+            raise ValueError("Senha e obrigatoria para criar candidato")
+
         entity = build_entity(entity_cls=Candidato, request=payload)
+        entity.senha_hash = hash_password(payload.senha)
         self._repository.add(entity)
         return entity_to_response(entity, CandidatoResponseDTO)
 
@@ -60,6 +65,8 @@ class CandidatoService:
             raise ValueError("Ja existe outro candidato com esse email")
 
         entity = apply_update(entity, payload)
+        if payload.senha:
+            entity.senha_hash = hash_password(payload.senha)
         self._repository.update(entity)
         return entity_to_response(entity, CandidatoResponseDTO)
 

@@ -8,6 +8,7 @@ from application.dtos.mapper import (
     entity_to_response,
     to_response_list,
 )
+from application.security.password_hasher import hash_password
 from domain.entidades.empresa import Empresa
 from domain.interfaces.empresa_repository import EmpresaRepository
 from application.dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
@@ -22,7 +23,11 @@ class EmpresaService:
         if empresa_por_cnpj is not None:
             raise ValueError("Ja existe empresa com esse CNPJ")
 
+        if not payload.senha:
+            raise ValueError("Senha e obrigatoria para criar empresa")
+
         entity = build_entity(entity_cls=Empresa, request=payload)
+        entity.senha_hash = hash_password(payload.senha)
         self._repository.add(entity)
         return entity_to_response(entity, EmpresaResponseDTO)
 
@@ -46,6 +51,8 @@ class EmpresaService:
             raise ValueError("Ja existe outra empresa com esse CNPJ")
 
         entity = apply_update(entity, payload)
+        if payload.senha:
+            entity.senha_hash = hash_password(payload.senha)
         self._repository.update(entity)
         return entity_to_response(entity, EmpresaResponseDTO)
 
