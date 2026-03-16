@@ -23,6 +23,9 @@ class Candidatura:
 
         if not self._vaga_id:
             raise ValueError("Vaga é obrigatória")
+        
+        if isinstance(self._status, int):
+            self._status = StatusCandidatura(self._status)
 
     @property
     def id(self) -> UUID:

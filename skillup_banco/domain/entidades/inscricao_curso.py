@@ -23,6 +23,9 @@ class InscricaoCurso:
 
         if not self._curso_id:
             raise ValueError("Curso é obrigatório")
+        
+        if isinstance(self._status, int):
+            self._status = StatusInscricao(self._status)
 
     @property
     def id(self) -> UUID:

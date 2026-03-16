@@ -18,6 +18,9 @@ class RequisitoVaga:
 
         if not self._competencia_id:
             raise ValueError("Competência é obrigatória")
+        
+        if isinstance(self._nivel, int):
+            self._nivel = Nivel(self._nivel)
 
     @property
     def id(self) -> UUID:

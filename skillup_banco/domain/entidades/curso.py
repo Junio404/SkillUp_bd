@@ -25,6 +25,9 @@ class Curso:
 
         if not self._instituicao_ensino_id:
             raise ValueError("Instituição de ensino é obrigatória")
+        
+        if isinstance(self._modalidade, int):
+            self._modalidade = Modalidade(self._modalidade)
 
     @property
     def id(self) -> UUID:

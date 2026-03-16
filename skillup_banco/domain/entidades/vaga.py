@@ -28,6 +28,12 @@ class Vaga:
 
         if not self._empresa_id:
             raise ValueError("Empresa é obrigatória")
+        
+        if isinstance(self._modalidade, int):
+            self._modalidade = Modalidade(self._modalidade)
+        
+        if isinstance(self._tipo, int):
+            self._tipo = TipoVaga(self._tipo)
 
     @property
     def id(self) -> UUID:
