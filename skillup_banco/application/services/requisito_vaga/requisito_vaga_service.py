@@ -2,8 +2,10 @@
 
 from uuid import UUID
 
-from domain.interfaces.requisito_vaga_repository import RequisitoVagaRepository
 from application.dtos.requisito_vaga_dto import RequisitoVagaRequestDTO, RequisitoVagaResponseDTO
+from application.dtos.mapper import entity_to_response, to_response_list, apply_update, build_entity
+from domain.entidades.requisito_vaga import RequisitoVaga
+from domain.interfaces.requisito_vaga_repository import RequisitoVagaRepository
 
 
 class RequisitoVagaService:
@@ -11,19 +13,41 @@ class RequisitoVagaService:
         self._repository = repository
 
     def create(self, payload: RequisitoVagaRequestDTO) -> RequisitoVagaResponseDTO:
-        pass
+        requisitos = self._repository.list_by_vaga(payload.vaga_id)
+        
+        for req in requisitos:
+            if req.competencia_id == payload.competencia_id:
+                raise ValueError("Vaga ja possui esse requisito de competencia")
+        
+        entity = build_entity(entity_cls=RequisitoVaga, request=payload)
+        self._repository.add(entity)
+        return entity_to_response(entity, RequisitoVagaResponseDTO)
 
     def get_by_id(self, requisito_vaga_id: UUID) -> RequisitoVagaResponseDTO | None:
-        pass
+        entity = self._repository.get_by_id(requisito_vaga_id)
+        if entity is None:
+            return None
+        return entity_to_response(entity, RequisitoVagaResponseDTO)
 
     def list_all(self) -> list[RequisitoVagaResponseDTO]:
-        pass
+        entities = self._repository.list_all()
+        return to_response_list(entities, RequisitoVagaResponseDTO)
 
     def update(self, requisito_vaga_id: UUID, payload: RequisitoVagaRequestDTO) -> RequisitoVagaResponseDTO | None:
-        pass
+        entity = self._repository.get_by_id(requisito_vaga_id)
+        if entity is None:
+            raise ValueError("RequisitoVaga nao encontrada")
+        
+        entity = apply_update(entity, payload)
+        self._repository.update(entity)
+        return entity_to_response(entity, RequisitoVagaResponseDTO)
 
     def delete(self, requisito_vaga_id: UUID) -> None:
-        pass
+        if not self._repository.exists(requisito_vaga_id):
+            raise ValueError("RequisitoVaga nao encontrada")
+        
+        self._repository.remove(requisito_vaga_id)
 
     def list_by_vaga(self, vaga_id: UUID) -> list[RequisitoVagaResponseDTO]:
-        pass
+        entities = self._repository.list_by_vaga(vaga_id)
+        return to_response_list(entities, RequisitoVagaResponseDTO)
