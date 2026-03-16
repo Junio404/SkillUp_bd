@@ -140,6 +140,7 @@ class CandidatoRepositorySql(CandidatoRepository):
                         c.nome,
                         c.cpf,
                         c.email,
+                        c.senha_hash,
                         c.areaInteresse,
                         c.nivelFormacao,
                         c.curriculo_url,
