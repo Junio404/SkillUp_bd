@@ -8,7 +8,7 @@ from application.dtos.base_dto import BaseRequestDTO, BaseResponseDTO
 
 
 class CandidaturaRequestDTO(BaseRequestDTO):
-    data_candidatura: datetime
+    data_candidatura: datetime | None = None
     status: StatusCandidatura
     candidato_id: UUID
     vaga_id: UUID
