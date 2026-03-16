@@ -14,7 +14,7 @@ from domain.entidades.enums import StatusCandidatura
 router = APIRouter(prefix="/candidaturas", tags=["Candidatura"])
 
 
-@router.get("/{candidato_id}", response_model=list[CandidaturaResponseDTO])
+@router.get("/candidato/{candidato_id}", response_model=list[CandidaturaResponseDTO])
 def list_by_candidato_candidatura(candidato_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
     try:
         return service.list_by_candidato(candidato_id=candidato_id)
@@ -27,7 +27,7 @@ def list_by_candidato_candidatura(candidato_id: UUID, service: CandidaturaServic
             status_code=500, detail=f"Erro interno ao executar list_by_candidato: {exc}") from exc
 
 
-@router.get("/{candidato_id}/vaga/{vaga_id}", response_model=CandidaturaResponseDTO)
+@router.get("/candidato/{candidato_id}/vaga/{vaga_id}", response_model=CandidaturaResponseDTO)
 def get_by_candidato_e_vaga_candidatura(candidato_id: UUID, vaga_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
     try:
         result = service.get_by_candidato_e_vaga(
@@ -47,16 +47,21 @@ def get_by_candidato_e_vaga_candidatura(candidato_id: UUID, vaga_id: UUID, servi
             status_code=500, detail=f"Erro interno ao executar get_by_candidato_e_vaga: {exc}") from exc
 
 
-@router.get("", response_model=list[CandidaturaResponseDTO])
+@router.get("/filtro", response_model=list[CandidaturaResponseDTO])
 def list_by_status_e_data_candidatura(
-        status: StatusCandidatura,
+        status: int,
         data_inicio: datetime,
         data_fim: datetime,
         service: CandidaturaService = Depends(get_candidatura_service),
 ):
     try:
+        if status not in {item.value for item in StatusCandidatura}:
+            raise HTTPException(
+                status_code=400, detail=f"Status invalido: {status}. Use 0, 1, 2, 3 ou 4")
+
+        status_enum = StatusCandidatura(status)
         return service.list_by_status_e_data(
-            status=status,
+            status=status_enum,
             data_inicio=data_inicio,
             data_fim=data_fim,
         )
@@ -80,7 +85,7 @@ def list_candidatura(service: CandidaturaService = Depends(get_candidatura_servi
             status_code=500, detail=f"Erro interno ao listar candidatura: {exc}") from exc
 
 
-@router.get("/{candidatura_id}", response_model=CandidaturaResponseDTO)
+@router.get("/id/{candidatura_id}", response_model=CandidaturaResponseDTO)
 def get_candidatura(candidatura_id: UUID, service: CandidaturaService = Depends(get_candidatura_service)):
     try:
         result = service.get_by_id(candidatura_id)

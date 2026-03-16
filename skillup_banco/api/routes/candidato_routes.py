@@ -12,7 +12,7 @@ from application.dtos.candidato_dto import CandidatoComCandidaturasResponseDTO, 
 router = APIRouter(prefix="/candidatos", tags=["Candidato"])
 
 
-@router.get("/{cpf}", response_model=CandidatoResponseDTO)
+@router.get("/cpf/{cpf}", response_model=CandidatoResponseDTO)
 def get_by_cpf_candidato(cpf: str, service: CandidatoService = Depends(get_candidato_service)):
     try:
         result = service.get_by_cpf(cpf=cpf)
@@ -31,7 +31,7 @@ def get_by_cpf_candidato(cpf: str, service: CandidatoService = Depends(get_candi
             status_code=500, detail=f"Erro interno ao executar get_by_cpf: {exc}") from exc
 
 
-@router.get("/{email}", response_model=CandidatoResponseDTO)
+@router.get("/email/{email}", response_model=CandidatoResponseDTO)
 def get_by_email_candidato(email: str, service: CandidatoService = Depends(get_candidato_service)):
     try:
         result = service.get_by_email(email=email)
@@ -61,7 +61,7 @@ def list_candidato(service: CandidatoService = Depends(get_candidato_service)):
             status_code=500, detail=f"Erro interno ao listar candidato: {exc}") from exc
 
 
-@router.get("/{candidato_id}", response_model=CandidatoResponseDTO)
+@router.get("/id/{candidato_id}", response_model=CandidatoResponseDTO)
 def get_candidato(candidato_id: UUID, service: CandidatoService = Depends(get_candidato_service)):
     try:
         result = service.get_by_id(candidato_id)

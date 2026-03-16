@@ -4,14 +4,21 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from api.dependencies import get_empresa_service
+from api.dependencies import get_curso_service, get_empresa_service, get_vaga_service
+from application.services.curso.curso_service import CursoService
 from application.services.empresa.empresa_service import EmpresaService
-from application.dtos.empresa_dto import EmpresaRequestDTO, EmpresaResponseDTO
+from application.services.vaga.vaga_service import VagaService
+from application.dtos.empresa_dto import (
+    EmpresaComCursosResponseDTO,
+    EmpresaComVagasResponseDTO,
+    EmpresaRequestDTO,
+    EmpresaResponseDTO,
+)
 
 
 router = APIRouter(prefix="/empresas", tags=["Empresa"])
 
-@router.get("/{cnpj}", response_model=EmpresaResponseDTO)
+@router.get("/cnpj/{cnpj}", response_model=EmpresaResponseDTO)
 def get_by_cnpj_empresa(cnpj: str, service: EmpresaService = Depends(get_empresa_service)):
     try:
         result = service.get_by_cnpj(cnpj=cnpj)
@@ -37,7 +44,65 @@ def list_empresa(service: EmpresaService = Depends(get_empresa_service)):
         raise HTTPException(status_code=500, detail=f"Erro interno ao listar empresa: {exc}") from exc
 
 
-@router.get("/{empresa_id}", response_model=EmpresaResponseDTO)
+@router.get("/{empresa_id}/vagas", response_model=EmpresaComVagasResponseDTO)
+def get_empresa_with_vagas(
+    empresa_id: UUID,
+    empresa_service: EmpresaService = Depends(get_empresa_service),
+    vaga_service: VagaService = Depends(get_vaga_service),
+):
+    try:
+        empresa = empresa_service.get_by_id(empresa_id)
+        if empresa is None:
+            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+
+        vagas = vaga_service.list_by_empresa(empresa_id)
+        return EmpresaComVagasResponseDTO(
+            id=empresa.id,
+            razao_social=empresa.razao_social,
+            nome_fantasia=empresa.nome_fantasia,
+            cnpj=empresa.cnpj,
+            vagas=vagas,
+        )
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Erro interno ao buscar empresa com vagas: {exc}") from exc
+
+
+@router.get("/{empresa_id}/cursos", response_model=EmpresaComCursosResponseDTO)
+def get_empresa_with_cursos(
+    empresa_id: UUID,
+    empresa_service: EmpresaService = Depends(get_empresa_service),
+    curso_service: CursoService = Depends(get_curso_service),
+):
+    try:
+        empresa = empresa_service.get_by_id(empresa_id)
+        if empresa is None:
+            raise HTTPException(status_code=404, detail="Registro nao encontrado")
+
+        cursos = curso_service.list_by_empresa(empresa_id)
+        return EmpresaComCursosResponseDTO(
+            id=empresa.id,
+            razao_social=empresa.razao_social,
+            nome_fantasia=empresa.nome_fantasia,
+            cnpj=empresa.cnpj,
+            cursos=cursos,
+        )
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Erro interno ao buscar empresa com cursos: {exc}") from exc
+
+
+@router.get("/id/{empresa_id}", response_model=EmpresaResponseDTO)
 def get_empresa(empresa_id: UUID, service: EmpresaService = Depends(get_empresa_service)):
     try:
         result = service.get_by_id(empresa_id)
@@ -64,7 +129,7 @@ def create_empresa(payload: EmpresaRequestDTO, service: EmpresaService = Depends
         raise HTTPException(status_code=500, detail=f"Erro interno ao criar empresa: {exc}") from exc
 
 
-@router.put("/{empresa_id}", response_model=EmpresaResponseDTO)
+@router.put("/id/{empresa_id}", response_model=EmpresaResponseDTO)
 def update_empresa(empresa_id: UUID, payload: EmpresaRequestDTO, service: EmpresaService = Depends(get_empresa_service)):
     try:
         result = service.update(empresa_id, payload)
@@ -81,7 +146,7 @@ def update_empresa(empresa_id: UUID, payload: EmpresaRequestDTO, service: Empres
         raise HTTPException(status_code=500, detail=f"Erro interno ao atualizar empresa: {exc}") from exc
 
 
-@router.delete("/{empresa_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/id/{empresa_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_empresa(empresa_id: UUID, service: EmpresaService = Depends(get_empresa_service)):
     try:
         service.delete(empresa_id)
