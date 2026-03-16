@@ -38,12 +38,6 @@ class FakeEmpresaRepository(EmpresaRepository):
                 return item
         return None
 
-    def get_by_email(self, email: str) -> Empresa | None:
-        for item in self._items.values():
-            if item.email == email:
-                return item
-        return None
-
 
 class TestEmpresaService(unittest.TestCase):
     def setUp(self) -> None:
@@ -55,7 +49,6 @@ class TestEmpresaService(unittest.TestCase):
             razao_social="Empresa Exemplo LTDA",
             nome_fantasia="Exemplo Tech",
             cnpj="12345678000199",
-            email="contato@exemplo.com.br",
         )
         defaults.update(overrides)
         return EmpresaRequestDTO(**defaults)
@@ -65,7 +58,6 @@ class TestEmpresaService(unittest.TestCase):
             _razao_social="Empresa Teste S.A",
             _nome_fantasia="Teste Corp",
             _cnpj="98765432000188",
-            _email="admin@testecorp.com",
         )
         defaults.update(overrides)
         entity = Empresa(**defaults)
@@ -80,19 +72,12 @@ class TestEmpresaService(unittest.TestCase):
         self.assertTrue(self.repo.exists(resultado.id))
         self.assertEqual(resultado.razao_social, "Empresa Exemplo LTDA")
         self.assertEqual(resultado.cnpj, "12345678000199")
-        self.assertEqual(resultado.email, "contato@exemplo.com.br")
 
     def test_criar_empresa_cnpj_duplicado_dispara_erro(self) -> None:
         self._nova_empresa(_cnpj="12345678000199")
 
         with self.assertRaises(ValueError):
             self.service.create(self._novo_request(cnpj="12345678000199"))
-
-    def test_criar_empresa_email_duplicado_dispara_erro(self) -> None:
-        self._nova_empresa(_email="contato@exemplo.com.br")
-
-        with self.assertRaises(ValueError):
-            self.service.create(self._novo_request(email="contato@exemplo.com.br"))
 
     # ── GET BY ID ───────────────────────────────────────────
 
@@ -112,8 +97,8 @@ class TestEmpresaService(unittest.TestCase):
     # ── LIST ALL ────────────────────────────────────────────
 
     def test_listar_todas(self) -> None:
-        self._nova_empresa(_cnpj="11111111000111", _email="um@teste.com")
-        self._nova_empresa(_cnpj="22222222000122", _email="dois@teste.com")
+        self._nova_empresa(_cnpj="11111111000111")
+        self._nova_empresa(_cnpj="22222222000122")
 
         resultado = self.service.list_all()
 
@@ -129,7 +114,7 @@ class TestEmpresaService(unittest.TestCase):
             self._novo_request(
                 razao_social="Empresa Teste Atualizada",
                 cnpj=empresa.cnpj,
-                email=empresa.email
+                nome_fantasia=empresa.nome_fantasia,
             ),
         )
 
@@ -140,13 +125,13 @@ class TestEmpresaService(unittest.TestCase):
             self.service.update(uuid4(), self._novo_request())
 
     def test_atualizar_cnpj_duplicado_dispara_erro(self) -> None:
-        self._nova_empresa(_cnpj="11111111000111", _email="um@teste.com")
-        empresa2 = self._nova_empresa(_cnpj="22222222000122", _email="dois@teste.com")
+        self._nova_empresa(_cnpj="11111111000111")
+        empresa2 = self._nova_empresa(_cnpj="22222222000122")
 
         with self.assertRaises(ValueError):
             self.service.update(
                 empresa2.id,
-                self._novo_request(cnpj="11111111000111", email="dois@teste.com"),
+                self._novo_request(cnpj="11111111000111"),
             )
 
     # ── DELETE ──────────────────────────────────────────────
