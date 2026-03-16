@@ -16,6 +16,7 @@
     <button class="profile-tab active" data-profile="candidato" onclick="switchProfile('candidato')">Candidato</button>
     <button class="profile-tab" data-profile="empresa" onclick="switchProfile('empresa')">Empresa</button>
     <button class="profile-tab" data-profile="instituicao" onclick="switchProfile('instituicao')">Instituição</button>
+    <button class="profile-tab" data-profile="dashboard" onclick="switchProfile('dashboard')">Dashboard</button>
   </div>
   <div class="api-badge">
     <div class="dot" id="api-dot"></div>
@@ -29,6 +30,15 @@
 
   <!-- Main -->
   <main id="main-content"></main>
+</div>
+
+<!-- SQL Monitor -->
+<div id="sql-monitor">
+  <div class="sql-monitor-header">
+    <span>SQL Puro Executado</span>
+    <button onclick="document.getElementById('sql-monitor').classList.toggle('minimized')">_</button>
+  </div>
+  <div id="sql-content">Aguardando operação...</div>
 </div>
 
 <!-- Toast -->

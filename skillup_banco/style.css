@@ -72,6 +72,7 @@ header {
 .profile-tab.active[data-profile="candidato"] { background: var(--accent-c); color: #000; }
 .profile-tab.active[data-profile="empresa"]   { background: var(--accent-e); color: #000; }
 .profile-tab.active[data-profile="instituicao"]{ background: var(--accent-i); color: #fff; }
+.profile-tab.active[data-profile="dashboard"] { background: #fff; color: #000; }
 
 .api-badge {
   font-size: 11px;
@@ -87,6 +88,73 @@ header {
   transition: background .3s;
 }
 .dot.online { background: var(--accent-c); box-shadow: 0 0 6px var(--accent-c); }
+
+/* ── SQL MONITOR ── */
+#sql-monitor {
+  position: fixed;
+  bottom: 0;
+  right: 28px;
+  width: 400px;
+  background: #000;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 900;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  transition: transform .3s;
+  box-shadow: 0 -4px 12px rgba(0,0,0,.5);
+}
+#sql-monitor.minimized { transform: translateY(calc(100% - 32px)); }
+.sql-monitor-header {
+  height: 32px;
+  background: var(--surface2);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+.sql-monitor-header span { font-weight: 600; color: var(--accent-c); }
+.sql-monitor-header button { background: none; border: none; color: var(--muted); cursor: pointer; }
+#sql-content {
+  padding: 12px;
+  height: 180px;
+  overflow-y: auto;
+  color: #aaccff;
+  line-height: 1.2;
+}
+
+/* ── REQUIREMENTS ── */
+.req-badge {
+  background: #2a2a00;
+  color: #ffcc00;
+  border: 1px solid #4a4a00;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.req-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.req-icon {
+  width: 32px; height: 32px;
+  background: var(--surface2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.req-info { flex: 1; }
+.req-status { font-size: 10px; color: var(--accent-c); margin-top: 4px; }
+.req-status.pending { color: var(--muted); }
 
 /* ── LAYOUT ── */
 .app {

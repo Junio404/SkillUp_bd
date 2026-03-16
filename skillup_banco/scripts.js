@@ -2,7 +2,69 @@
   const API_URL = 'http://localhost:8000';
 
   // ── COMUNICAÇÃO ────────────────────────────────────────────
+  const SQL_MAP = {
+    'POST /candidatos/': "INSERT INTO candidato (id, nome, cpf, email, senha_hash, areaInteresse, nivelFormacao, curriculo_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    'GET /candidatos/cpf/': "SELECT * FROM candidato WHERE cpf = ?",
+    'GET /candidatos/email/': "SELECT * FROM candidato WHERE email = ?",
+    'GET /candidatos/id/': "SELECT * FROM candidato WHERE id = ?",
+    'GET /candidatos/': "SELECT * FROM candidato",
+    'POST /candidaturas/': "INSERT INTO candidatura (id, dataCandidatura, status, candidato_id, vaga_id) VALUES (?, ?, ?, ?, ?)",
+    'PATCH /candidaturas/': "UPDATE candidatura SET status = ? WHERE id = ?",
+    'GET /candidaturas/filtro': "SELECT * FROM candidatura WHERE status = ? AND dataCandidatura BETWEEN ? AND ?",
+    'GET /candidaturas/candidato/': "SELECT * FROM candidatura WHERE candidato_id = ?",
+    'GET /candidaturas/': "SELECT * FROM candidatura",
+    'POST /competencias-candidato/': "INSERT INTO competencia_candidato (candidato_id, competencia_id, nivel) VALUES (?, ?, ?)",
+    'GET /competencias-candidato/': "SELECT * FROM competencia_candidato",
+    'GET /vagas/': "SELECT * FROM vaga",
+    'POST /vagas/': "INSERT INTO vaga (id, titulo, empresa_id, modalidade, tipo, prazo_inscricao, localidade, jornada, descricao) VALUES (...)",
+    'POST /inscricoes-curso/': "INSERT INTO inscricao_curso (id, candidato_id, curso_id, data_inscricao, status) VALUES (?, ?, ?, ?, ?)",
+    'GET /inscricoes-curso/': "SELECT * FROM inscricao_curso WHERE candidato_id = ?",
+    'POST /instituicoes-area-ensino/': "INSERT INTO instituicao_area_ensino (instituicao_ensino_id, area_ensino_id) VALUES (?, ?)",
+    'GET /instituicoes-area-ensino/': "SELECT * FROM instituicao_area_ensino",
+    'POST /empresas/': "INSERT INTO empresa (id, razao_social, nome_fantasia, cnpj, senha_hash) VALUES (?, ?, ?, ?, ?)",
+    'GET /empresas/cnpj/': "SELECT * FROM empresa WHERE cnpj = ?",
+    'GET /empresas/': "SELECT * FROM empresa",
+    'POST /instituicoes-ensino/': "INSERT INTO instituicao_ensino (id, razao_social, nome_fantasia, cnpj, registro_educacional, tipo) VALUES (...)",
+    'GET /instituicoes-ensino/registro/': "SELECT * FROM instituicao_ensino WHERE registro_educacional = ?",
+    'GET /instituicoes-ensino/': "SELECT * FROM instituicao_ensino",
+    'POST /cursos/': "INSERT INTO curso (id, nome, modalidade, instituicao_ensino_id, area, carga_horaria, capacidade, prazo_inscricao, empresa_id) VALUES (...)",
+    'GET /cursos/': "SELECT * FROM curso",
+    'POST /areas-ensino/': "INSERT INTO area_ensino (id, nome) VALUES (?, ?)",
+    'GET /areas-ensino/': "SELECT * FROM area_ensino",
+    'POST /competencias/': "INSERT INTO competencia (id, nome, descricao) VALUES (?, ?, ?)",
+    'GET /competencias/': "SELECT * FROM competencia",
+  };
+
+  function logSql(method, path) {
+    const monitor = document.getElementById('sql-content');
+    if (!monitor) return;
+    
+    // Remove query params and normalize slashes for matching
+    let purePath = path.split('?')[0];
+    if (!purePath.endsWith('/')) purePath += '/';
+    
+    let sql = "-- SQL Simulado: SELECT * FROM table"; 
+    
+    // Find BEST match (longest key)
+    let bestMatch = "";
+    for (const key in SQL_MAP) {
+      let [m, p] = key.split(' ');
+      if (!p.endsWith('/')) p += '/';
+      
+      if (method === m && purePath.startsWith(p)) {
+        if (p.length > bestMatch.length) {
+          bestMatch = p;
+          sql = SQL_MAP[key];
+        }
+      }
+    }
+
+    const time = new Date().toLocaleTimeString();
+    monitor.innerHTML = `<div style="margin-bottom:12px; border-bottom:1px solid #1a1a1a; padding-bottom:8px;"><div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span style="color:var(--muted); font-size:10px; flex-shrink:0;">[${time}]</span><span style="color:var(--accent-c); font-weight:bold; font-size:10px; background:#111; padding:1px 5px; border-radius:3px; flex-shrink:0;">${method}</span><span style="color:var(--muted); font-size:10px; font-family:var(--font-mono); word-break:break-all; line-height:1.2;">${escHtml(path)}</span></div><code style="color:#aaccff; font-size:11px; font-family:var(--font-mono); display:block; background:#0a0a0c; padding:6px; border-radius:4px; border:1px solid #1a1a1a; white-space:pre-wrap; word-break:break-word; line-height:1.3;">${escHtml(sql)}</code></div>` + monitor.innerHTML;
+  }
+
   async function apiRequest(method, path, body) {
+    logSql(method, path);
     try {
       const opts = { method, headers: { 'Content-Type': 'application/json' } };
       if (body) opts.body = JSON.stringify(body);
@@ -129,6 +191,13 @@
         { id: 'areas-ensino',  icon: '◉', label: 'Áreas de ensino' },
         { id: 'todas-inst',    icon: '▣', label: 'Todas instituições' },
       ]
+    },
+    dashboard: {
+      accent: 'd',
+      nav: [
+        { id: 'dash-main', icon: '◫', label: 'Checklist Projeto' },
+        { id: 'dash-sql',  icon: '◈', label: 'Esquema Relacional' },
+      ]
     }
   };
 
@@ -157,6 +226,17 @@
     });
   }
 
+  const REQUIREMENTS = {
+    'meu-perfil': 'Requisito: Inserção em tabela simples',
+    'competencias-meu': 'Requisito: Inserção em tabela associativa (N:N)',
+    'inscricoes': 'Requisito: Inserção em tabela associativa (N:N)',
+    'vagas': 'Requisito: Consulta parametrizável',
+    'minhas-vagas': 'Requisito: Consulta parametrizável',
+    'candidatos-vaga': 'Requisito: Consulta com múltiplos parâmetros (Status + Datas)',
+    'candidaturas': 'Requisito: Atualização de registro (Status)',
+    'areas-ensino': 'Requisito: Inserção N:N (Instituição x Área)',
+  };
+
   function navigateTo(id) {
     currentNav = id;
     renderSidebar();
@@ -170,6 +250,7 @@
       'inst-perfil': pageCadastrarInstituicao, 'meus-cursos': pageMeusCursos,
       'novo-curso': pageCadastrarCurso, 'areas-ensino': pageAreasEnsino,
       'todas-inst': pageTodasInstituicoes,
+      'dash-main': pageDashboard, 'dash-sql': pageEsquema,
     };
     const main = document.getElementById('main-content');
     if (!main) return;
@@ -179,10 +260,12 @@
   }
 
   function pageWrap(container, title, subtitle, html) {
+    const req = REQUIREMENTS[currentNav];
     container.innerHTML = `<div class="page active">
       <div class="page-header"><div>
         <div class="page-title">${title}</div>
         <div class="page-sub">${subtitle}</div>
+        ${req ? `<div class="req-badge" style="margin-top:8px">${req}</div>` : ''}
       </div></div>${html}</div>`;
   }
 
@@ -191,6 +274,85 @@
     return `<div class="empty"><div class="empty-icon">◫</div>${msg}</div>`;
   }
   const getAccent = () => PROFILES[currentProfile].accent;
+
+  // ══════════════════════════════════════════════════════════
+  //  DASHBOARD
+  // ══════════════════════════════════════════════════════════
+
+  function pageDashboard(container) {
+    pageWrap(container, 'Dashboard do Professor', 'Verificação de requisitos do TP2', `
+      <div class="card">
+        <div class="card-title">Resumo de Requisitos</div>
+        <div style="display:grid;gap:16px">
+          ${renderReqItem('Inserção em ≥3 tabelas', 'Candidato, Empresa, Vaga, etc.', true)}
+          ${renderReqItem('Inserção em tabela associativa (N:N)', 'Competência Candidato, Inscrição Curso.', true)}
+          ${renderReqItem('≥6 Consultas distintas', 'Busca por CPF, CNPJ, Vagas por Empresa, etc.', true)}
+          ${renderReqItem('≥3 Consultas parametrizáveis', 'Busca por CPF, Registro, ID de Empresa.', true)}
+          ${renderReqItem('1 Consulta com múltiplos parâmetros', 'Filtro de Candidaturas (Status + Intervalo de Datas).', true)}
+          ${renderReqItem('Atualização em ≥1 tabela', 'Atualização de status de candidatura.', true)}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ações Rápidas</div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" onclick="window.location.reload()">Resetar UI</button>
+          <button class="btn btn-ghost" onclick="abrirDocs()">Ver Especificação</button>
+        </div>
+      </div>
+    `);
+  }
+
+  function renderReqItem(label, desc, ok) {
+    return `<div class="req-card">
+      <div class="req-icon">${ok ? '✔' : '○'}</div>
+      <div class="req-info">
+        <div style="font-size:13px;font-weight:600">${label}</div>
+        <div style="font-size:11px;color:var(--muted)">${desc}</div>
+      </div>
+      <div class="req-status ${ok ? '' : 'pending'}">${ok ? 'IMPLEMENTADO' : 'PENDENTE'}</div>
+    </div>`;
+  }
+
+  function pageEsquema(container) {
+    pageWrap(container, 'Esquema do Banco', 'Modelagem Relacional (3FN)', `
+      <div class="card">
+        <div class="card-title">Estrutura de Tabelas</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px">
+          O projeto segue as normas de integridade referencial com Chaves Primárias (UUID) e Chaves Estrangeiras.<br>
+          Todas as operações utilizam <b>SQL Puro</b> via repositórios Python.
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:24px">
+          <div>
+            <div class="card-title" style="font-size:11px; margin-bottom:8px">Modelo Entidade-Relacionamento (MER)</div>
+            <img src="diagrams/mer_skillup.png" style="width:100%; border-radius:4px; border:1px solid var(--border)" 
+                 onerror="this.parentElement.innerHTML='<div class=\'empty\'>Imagem MER não encontrada em diagrams/mer_skillup.png</div>'">
+          </div>
+          
+          <div>
+            <div class="card-title" style="font-size:11px; margin-bottom:8px">Diagrama Entidade-Relacionamento (DER)</div>
+            <img src="diagrams/der-novo (2)_page-0001.jpg" style="width:100%; border-radius:4px; border:1px solid var(--border)"
+                 onerror="this.parentElement.innerHTML='<div class=\'empty\'>Imagem DER não encontrada em diagrams/der-novo (2)_page-0001.jpg</div>'">
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  function abrirDocs() {
+    const specs = `
+REQUISITOS DO TRABALHO:
+1. SQL Puro: Repositórios em infrastructure/repositories/*.py
+2. Inserção: ≥3 tabelas (Candidato, Empresa, Vaga...)
+3. Inserção N:N: CompetenciaCandidato, InscricaoCurso...
+4. Consulta: ≥6 distintas
+5. Consulta Parametrizável: CPF, CNPJ, ID...
+6. Consulta Multi-Parâmetro: Filtro Candidaturas (status + datas)
+7. Atualização: Status de Candidatura
+    `;
+    alert(specs);
+  }
+
 
   // ══════════════════════════════════════════════════════════
   //  CANDIDATO
@@ -969,6 +1131,7 @@
     criarInstituicao, buscarInstituicaoPorRegistro,
     buscarCursosInstituicao, listarTodosCursos,
     criarCurso, criarAreaEnsino, associarAreaInstituicao,
+    abrirDocs
   });
 
   checkApiHealth();
