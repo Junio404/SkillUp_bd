@@ -28,5 +28,18 @@ services:
     ports:
       - "8000:8000"
 
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: skillup_db_init
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./skillup_banco/scripts/script_sistema_laboral.sql:/tmp/script.sql
+    entrypoint: >
+      /bin/bash -c "
+      /opt/mssql-tools18/bin/sqlcmd -S db -U sa -P '${DB_PASSWORD}' -C -i /tmp/script.sql;
+      echo 'Inicialização do banco concluída!';"
+
 volumes:
   sqlserver_data:
