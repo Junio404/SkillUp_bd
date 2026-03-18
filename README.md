@@ -1,22 +1,22 @@
 # SkillUp - Trabalho Prático 2 (Banco de Dados)
 
-![Status](https://img.shields.io/badge/Status-Finalizado%20✅-brightgreen)
+![Status](https://img.shields.io/badge/Status-Finalizado-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.135.1-green)
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-red)
 ![Docker](https://img.shields.io/badge/Docker-Containerizado-blue)
 
-## 📋 Descrição
+## Descrição
 
 **SkillUp** é uma plataforma completa de gestão laboral e educacional que conecta **candidatos**, **vagas**, **cursos** e **instituições de ensino**. O projeto foi desenvolvido como trabalho acadêmico da disciplina de Banco de Dados seguindo rigorosos padrões profissionais:
 
-✅ **Implementação de operações CRUD completas** utilizando SQL puro  
-✅ **Arquitetura em camadas** bem definida (Domain, Application, Infrastructure, API)  
-✅ **API REST robusta** com FastAPI e injeção de dependência  
-✅ **Banco de dados** em 3ª Forma Normal (3FN) com 14 tabelas  
-✅ **Testes unitários** para todas as operações  
-✅ **Interface web** com JavaScript vanilla e monitoramento SQL em tempo real  
-✅ **Containerização** com Docker para execução reproduzível
+- **Implementação de operações CRUD completas** utilizando SQL puro  
+- **Arquitetura em camadas** bem definida (Domain, Application, Infrastructure, API)  
+- **API REST robusta** com FastAPI e injeção de dependência  
+- **Banco de dados** em 3ª Forma Normal (3FN) com 13 tabelas  
+- **Testes unitários** para todas as operações  
+- **Interface web** com JavaScript vanilla e monitoramento SQL em tempo real  
+- **Containerização** com Docker para execução reproduzível
 
 O sistema utiliza **Microsoft SQL Server** como SGBD e expõe uma **API REST completa** com swagger automático para fácil integração.
 
@@ -33,9 +33,9 @@ O sistema utiliza **Microsoft SQL Server** como SGBD e expõe uma **API REST com
 
 ---
 
-## ✨ Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
-### 🔍 Operações de Leitura (SELECT)
+### Operações de Leitura (SELECT)
 - Listar todos os candidatos, vagas, cursos, empresas e instituições
 - Buscar candidato por CPF ou email (parametrizável)
 - Buscar empresa por CNPJ
@@ -43,7 +43,7 @@ O sistema utiliza **Microsoft SQL Server** como SGBD e expõe uma **API REST com
 - Filtrar candidaturas por status e intervalo de datas (múltiplos parâmetros)
 - Buscar vagas por empresa, modalidade e tipo
 
-### ✍️ Operações de Inserção (INSERT)
+### Operações de Inserção (INSERT)
 - **Candidatos**: Nome, CPF, email, senha com hash bcrypt
 - **Empresas**: Razão social, CNPJ, nombre fantasia
 - **Vagas**: Título, tipo (emprego/estágio/trainee), modalidade (presencial/remoto/híbrido)
@@ -53,23 +53,23 @@ O sistema utiliza **Microsoft SQL Server** como SGBD e expõe uma **API REST com
 - **Inscrições** (N:N): Associação candidato × curso
 - **Requisitos de Vaga** (N:N): Associação vaga × competência
 
-### ✏️ Operações de Atualização (UPDATE)
+### Operações de Atualização (UPDATE)
 - **Status de Candidatura**: Enviado → Em análise → Aceito → Recusado → Cancelado
 - Monitoramento completo do ciclo de vida de candidaturas
 
-### 🗑️ Operações de Deleção (DELETE)
+### Operações de Deleção (DELETE)
 - Suporte completo para remoção de registros com validação de integridade referencial
 
 ---
 
-# 🏗️ Arquitetura do Projeto
+# Arquitetura do Projeto
 
 O projeto segue uma **arquitetura em camadas profissional** com separação clara de responsabilidades:
 
 ```
 skillup_banco/
 │
-├── domain/                           # 🎯 Camada de Domínio
+├── domain/                           # Camada de Domínio
 │   ├── entidades/                    # Modelos de negócio com validações
 │   │   ├── candidato.py             # Entidade Candidato
 │   │   ├── vaga.py                  # Entidade Vaga
@@ -78,7 +78,7 @@ skillup_banco/
 │   ├── interfaces/                  # Contratos de repositório
 │   └── enums.py                     # Enumerações (Modalidade, Status, etc)
 │
-├── infrastructure/                  # 💾 Camada de Infraestrutura
+├── infrastructure/                  # Camada de Infraestrutura
 │   ├── database/                    # Configuração de conexão
 │   └── repositories/                # 13 repositórios com SQL puro
 │       ├── candidato_repository_sql.py
@@ -86,13 +86,13 @@ skillup_banco/
 │       ├── competencia_candidato_repository_sql.py
 │       └── ...
 │
-├── application/                     # 🏢 Camada de Aplicação
+├── application/                     # Camada de Aplicação
 │   ├── services/                    # Lógica de negócio (13 serviços)
 │   ├── dtos/                        # Data Transfer Objects
 │   ├── mapper.py                    # Mapeamento entre camadas
 │   └── security/                    # Hashing de senhas (bcrypt)
 │
-├── api/                             # 📡 Camada de API
+├── api/                             # Camada de API
 │   ├── main.py                      # FastAPI app com CORS
 │   ├── dependencies.py              # Injeção de dependência
 │   └── routes/                      # 13 roteadores REST
@@ -101,21 +101,21 @@ skillup_banco/
 │       ├── candidatura_routes.py
 │       └── ...
 │
-├── tests/                           # ✅ Testes Unitários
+├── tests/                           # Testes Unitários
 │   ├── test_candidato_services.py
 │   ├── test_vaga_services.py
 │   ├── test_candidatura_services.py
 │   └── ...
 │
-├── scripts/                         # 🔧 Scripts SQL
+├── scripts/                         # Scripts SQL
 │   └── script_sistema_laboral.sql   # DDL com tabelas, constraints, índices
 │
-├── index.html                       # 🖥️ Frontend com JavaScript
+├── index.html                       # Frontend com JavaScript
 ├── scripts.js                       # Lógica frontend + Monitor SQL
 └── style.css                        # Estilização (design system)
 ```
 
-### 📚 Padrões de Design Utilizados
+### Padrões de Design Utilizados
 
 | Padrão | Implementação |
 |--------|---------------|
@@ -127,7 +127,7 @@ skillup_banco/
 
 ---
 
-# 🛠️ Tecnologias Utilizadas
+# Tecnologias Utilizadas
 
 | Camada | Tecnologia | Versão | Propósito |
 |--------|-----------|--------|----------|
@@ -135,7 +135,7 @@ skillup_banco/
 | **API** | FastAPI | 0.135.1 | Framework REST assíncrono |
 | **BD** | SQL Server | 2022 | SGBD com SQL puro |
 | **Driver** | PyODBC | Latest | Conexão com SQL Server |
-| **ORM** | ❌ Nenhum | — | SQL puro para máximo controle |
+| **ORM** | Nenhum | — | SQL puro para máximo controle |
 | **Segurança** | Passlib + bcrypt | 1.7.4 | Hash de senhas |
 | **Servidor** | Uvicorn | Latest | ASGI server |
 | **Containerização** | Docker + Compose | 24+ | Ambiente reproducível |
@@ -147,11 +147,11 @@ skillup_banco/
 
 ---
 
-# 💾 Banco de Dados
+# Banco de Dados
 
 ## Modelo Relacional (3FN)
 
-O banco segue a **3ª Forma Normal** com **14 tabelas principais**:
+O banco segue a **3ª Forma Normal** com **13 tabelas principais**:
 
 ### Tabelas Independentes
 - `COMPETENCIA` - Habilidades e tecnologias
@@ -174,14 +174,14 @@ O banco segue a **3ª Forma Normal** com **14 tabelas principais**:
 
 ## Integridade Referencial
 
-✅ **Chaves Primárias** (UUID)  
-✅ **Chaves Estrangeiras** com cascade rules  
-✅ **Constraints NOT NULL, UNIQUE, CHECK**  
-✅ **Índices de performance** nas colunas mais consultadas
+- **Chaves Primárias** (UUID)  
+- **Chaves Estrangeiras** com cascade rules  
+- **Constraints NOT NULL, UNIQUE, CHECK**  
+- **Índices de performance** nas colunas mais consultadas
 
 ---
 
-# 🚀 Como Rodar o Projeto
+# Como Rodar o Projeto
 
 ## Pré-requisitos
 
@@ -194,7 +194,7 @@ O banco segue a **3ª Forma Normal** com **14 tabelas principais**:
 
 ---
 
-# Rodando com Docker (Recomendado) 🐳
+# Rodando com Docker (Recomendado)
 
 ## 1. Clonar o repositório
 
@@ -263,7 +263,7 @@ skillup_app     (API FastAPI)
 | **ReDoc** | [http://localhost:8000/redoc](http://localhost:8000/redoc) | Documentação em formato diferente |
 | **SQL Server** | `localhost:1433` | BD (user: `sa`, pwd: `SkillUp2026Db!X`) |
 
-### ✨ Destaques do Frontend
+### Destaques do Frontend
 
 - **Dashboard de Requisitos**: Verifica conformidade com TP2
 - **Monitor SQL em Tempo Real**: Visualiza queries executadas
@@ -305,7 +305,7 @@ docker compose up --build app -d
 
 # Executar sem Docker (Alternativa)
 
-> ⚠️ Requer instalação manual de Python 3.11+ e SQL Server
+> Requer instalação manual de Python 3.11+ e SQL Server
 
 ## Pré-requisitos adicionais
 
@@ -376,7 +376,7 @@ A aplicação estará em [http://localhost:8000](http://localhost:8000)
 
 ---
 
-# ✅ Executando os Testes
+# Executando os Testes
 
 Os testes unitários estão na pasta `tests/` e cobrem todos os serviços.
 
@@ -395,18 +395,18 @@ python -m unittest tests.test_candidato_services -v
 
 ## Testes implementados
 
-- ✅ `test_candidato_services.py` - Operações de candidato
-- ✅ `test_vaga_services.py` - Operações de vaga
-- ✅ `test_candidatura_services.py` - Operações de candidatura
-- ✅ `test_competencia.py` - Operações de competência
-- ✅ `test_curso.py` - Operações de curso
-- ✅ `test_empresa_service.py` - Operações de empresa
-- ✅ `test_instituicao_ensino_services.py` - Operações de instituição
-- ✅ E mais 6 outros testes...
+- `test_candidato_services.py` - Operações de candidato
+- `test_vaga_services.py` - Operações de vaga
+- `test_candidatura_services.py` - Operações de candidatura
+- `test_competencia.py` - Operações de competência
+- `test_curso.py` - Operações de curso
+- `test_empresa_service.py` - Operações de empresa
+- `test_instituicao_ensino_services.py` - Operações de instituição
+- E mais 6 outros testes...
 
 ---
 
-# 🔧 Troubleshooting
+# Troubleshooting
 
 ## Portas já em uso
 
@@ -463,28 +463,28 @@ Se rodando sem Docker e tiver erro de driver ODBC:
 
 ---
 
-# 📡 API REST - Endpoints
+# API REST - Endpoints
 
-O sistema expõe 13 roteadores com endpoints completos para CRUD:
+O sistema expõe 13 roteadores com endpoints para operações de CRUD (considerando as rotas base e rotas com `/{id}`):
 
-| Recurso | GET | POST | PATCH/PUT | DELETE |
-|---------|-----|------|-----------|--------|
-| `/candidatos` | ✅ | ✅ | ❌ | ❌ |
-| `/candidatos/cpf/{cpf}` | ✅ | - | - | - |
-| `/candidatos/email/{email}` | ✅ | - | - | - |
-| `/vagas` | ✅ | ✅ | ❌ | ❌ |
-| `/cursos` | ✅ | ✅ | ❌ | ❌ |
-| `/empresas` | ✅ | ✅ | ❌ | ❌ |
-| `/instituicoes-ensino` | ✅ | ✅ | ❌ | ❌ |
-| `/candidaturas` | ✅ | ✅ | ✅ | ❌ |
-| `/candidaturas/{id}/status` | - | - | ✅ | - |
-| `/competencias` | ✅ | ✅ | ❌ | ❌ |
-| `/competencias-candidato` | ✅ | ✅ | ❌ | ❌ |
-| `/inscricoes-curso` | ✅ | ✅ | ❌ | ❌ |
-| `/area-ensino` | ✅ | ✅ | ❌ | ❌ |
-| `/instituicao-area-ensino` | ✅ | ✅ | ❌ | ❌ |
-| `/curso-competencia` | ✅ | ✅ | ❌ | ❌ |
-| `/requisito-vaga` | ✅ | ✅ | ❌ | ❌ |
+| Recurso (Base + `/{id}`) | GET | POST | PATCH/PUT | DELETE |
+|--------------------------|-----|------|-----------|--------|
+| `/candidatos` | Sim | Sim | Sim | Sim |
+| `/candidatos/cpf/{cpf}` | Sim | - | - | - |
+| `/candidatos/email/{email}` | Sim | - | - | - |
+| `/vagas` | Sim | Sim | Sim | Sim |
+| `/cursos` | Sim | Sim | Sim | Sim |
+| `/empresas` | Sim | Sim | Sim | Sim |
+| `/instituicoes-ensino` | Sim | Sim | Sim | Sim |
+| `/candidaturas` | Sim | Sim | Sim | Sim |
+| `/candidaturas/{id}/status` | - | - | Sim | - |
+| `/competencias` | Sim | Sim | Sim | Sim |
+| `/competencias-candidato` | Sim | Sim | Não | Sim |
+| `/inscricoes-curso` | Sim | Sim | Não | Sim |
+| `/area-ensino` | Sim | Sim | Não | Não |
+| `/instituicao-area-ensino` | Sim | Sim | Não | Não |
+| `/curso-competencia` | Sim | Sim | Não | Sim |
+| `/requisito-vaga` | Sim | Sim | Não | Sim |
 
 **Exemplo de uso:**
 ```bash
@@ -510,26 +510,26 @@ curl -X PATCH "http://localhost:8000/candidaturas/{id}/status?novo_status=2"
 
 ---
 
-# ✅ Conformidade com Requisitos (TP2)
+# Conformidade com Requisitos (TP2)
 
 O projeto atende **100% dos requisitos obrigatórios** da disciplina:
 
 | Requisito | Status | Implementação |
 |-----------|--------|---------------|
-| Modelo em 3FN | ✅ | 14 tabelas bem normalizadas |
-| Inserção ≥3 tabelas | ✅ | Candidato, Empresa, Vaga, Curso, Instituição |
-| Inserção N:N | ✅ | CompetenciaCandidato, InscrCurso, ReqVaga |
-| ≥6 Consultas | ✅ | 8 consultas implementadas |
-| ≥3 Parametrizáveis | ✅ | CPF, CNPJ, Registro, ID |
-| 1 Multi-parâmetro | ✅ | Filtro Candidatura (status + datas) |
-| Atualização | ✅ | Status de candidatura |
-| SQL Puro | ✅ | Sem ORM (repositórios `.py`) |
-| Testes | ✅ | 10+ testes unitários |
-| Interface | ✅ | Web con Dashboard + Monitor SQL |
+| Modelo em 3FN | OK | 13 tabelas bem normalizadas |
+| Inserção ≥3 tabelas | OK | Candidato, Empresa, Vaga, Curso, Instituição |
+| Inserção N:N | OK | CompetenciaCandidato, InscrCurso, ReqVaga |
+| ≥6 Consultas | OK | 8 consultas implementadas |
+| ≥3 Parametrizáveis | OK | CPF, CNPJ, Registro, ID |
+| 1 Multi-parâmetro | OK | Filtro Candidatura (status + datas) |
+| Atualização | OK | Status de candidatura |
+| SQL Puro | OK | Sem ORM (repositórios `.py`) |
+| Testes | OK | 10+ testes unitários |
+| Interface | OK | Web com Dashboard + Monitor SQL |
 
 ---
 
-# 📚 Documentação Adicional
+# Documentação Adicional
 
 - **Especificação Completa**: [Trabalho.md](Trabalho.md)
 - **API Interativa**: [Swagger UI](http://localhost:8000/docs)
@@ -538,7 +538,7 @@ O projeto atende **100% dos requisitos obrigatórios** da disciplina:
 
 ---
 
-# 🤝 Contribuindo
+# Contribuindo
 
 Este é um projeto acadêmico finalizado. Para sugestões ou correções:
 
@@ -550,13 +550,13 @@ Este é um projeto acadêmico finalizado. Para sugestões ou correções:
 
 ---
 
-# 📝 Licença
+# Licença
 
 Este projeto é de código aberto para fins educacionais.
 
 ---
 
-# 📞 Contato / Suporte
+# Contato / Suporte
 
 Para dúvidas sobre o projeto:
 - Abra uma issue no GitHub
@@ -566,4 +566,4 @@ Para dúvidas sobre o projeto:
 ---
 
 **Última atualização:** Março 2026  
-**Status:** ✅ Completo e pronto para produção
+**Status:** Completo
